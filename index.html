@@ -28,7 +28,28 @@ body{background-image:url("images/bgimagelarge.jpg"); background-size:cover; bac
 </style>
 
 <script>
+
 function flashlightOn(){
+
+window.plugins.flashlight.available(function(isAvailable) {
+  if (isAvailable) {
+ 
+    // switch on
+    window.plugins.flashlight.switchOn(
+      function() {}, // optional success callback
+      function() {}, // optional error callback
+      {intensity: 0.3} // optional as well
+    );
+ 
+    // switch off after 3 seconds
+    setTimeout(function() {
+      window.plugins.flashlight.switchOff(); // success/error callbacks may be passed
+    }, 3000);
+ 
+  } else {
+    alert("Flashlight not available on this device");
+  }
+});
 }
 
 function handleEvent(e){
@@ -47,6 +68,7 @@ function init(){
 
   window.setInterval("geometryTick()",1000);
 }
+
 function geometryTick(){
   if((ww != window.innerWidth)||(wh != window.innerHeight)){
     ww = window.innerWidth;

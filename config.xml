@@ -19,4 +19,7 @@
 <gap:splash src="res/splash.png" />
 <access origin="*" />
 <icon src="res/icon.png" />
+
+<gap:plugin name="cordova-plugin-flashlight" source="npm" />
+
 </widget>
