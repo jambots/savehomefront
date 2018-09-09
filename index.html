@@ -28,7 +28,9 @@ body{background-image:url("images/bgimagelarge.jpg"); background-size:cover; bac
 </style>
 <script src="phonegap.js"></script>
 <script>
-
+function openUrl(url){
+cordova.InAppBrowser.open(url, "_system")
+}
 function flashlightOn(){
 
 window.plugins.flashlight.available(function(isAvailable) {
@@ -67,6 +69,7 @@ function handleEvent(e){
     }
   }
 }
+
 function init(){
   setupButtons();
   geometryTick();
@@ -173,9 +176,7 @@ function toggleBackground(){
                   el.mp3.play();
               }
           }
-function openUrl(url){
-  window.location.href=url;
-}
+
 function clickPlay(e){
   playSound(this, 'teaser.mp3');
   if (!e){
