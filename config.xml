@@ -27,6 +27,14 @@
 <access origin="*" />
 <icon src="res/icon.png" />
 
+<preference name="StatusBarOverlaysWebView" value="true" />
+<gap:config-file platform="ios" parent="UIStatusBarHidden">
+    <true/>
+</gap:config-file>
+<gap:config-file platform="ios" parent="UIViewControllerBasedStatusBarAppearance">
+    <false/>
+</gap:config-file>
+
 <gap:plugin name="cordova-plugin-flashlight" source="npm" />
 <gap:config-file platform="android" parent="/manifest">
      <application android:debuggable="true" />

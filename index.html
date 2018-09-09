@@ -33,7 +33,12 @@ function flashlightOn(){
 
 window.plugins.flashlight.available(function(isAvailable) {
   if (isAvailable) {
- 
+    window.plugins.flashlight.toggle(
+      function() {}, // optional success callback
+      function() {}, // optional error callback
+      {intensity: 1} // optional as well, used on iOS when switching on
+    ); 
+/*
     // switch on
     window.plugins.flashlight.switchOn(
       function() {}, // optional success callback
@@ -45,7 +50,7 @@ window.plugins.flashlight.available(function(isAvailable) {
     setTimeout(function() {
       window.plugins.flashlight.switchOff(); // success/error callbacks may be passed
     }, 3000);
- 
+*/ 
   } else {
     alert("Flashlight not available on this device");
   }
