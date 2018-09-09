@@ -25,6 +25,7 @@
 <preference name="orientation" value="portrait" />
 <gap:splash src="res/splash.png" />
 <access origin="*" />
+<allow-navigation href="https://www.jambots.com" />
 <icon src="res/icon.png" />
 
 <preference name="StatusBarOverlaysWebView" value="true" />
