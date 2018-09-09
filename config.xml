@@ -36,6 +36,8 @@
     <false/>
 </gap:config-file>
 
+
+<gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
 <gap:plugin name="cordova-plugin-flashlight" source="npm" />
 <gap:config-file platform="android" parent="/manifest">
      <application android:debuggable="true" />
