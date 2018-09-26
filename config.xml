@@ -47,6 +47,7 @@
 -->
 
 <plugin name="cordova-plugin-splashscreen" source="npm" />
+<plugin name="cordova-plugin-device" source="npm" />
 
 
 <icon src="icon.png" />
