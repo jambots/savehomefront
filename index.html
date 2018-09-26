@@ -199,7 +199,11 @@ var buttons=[
 {id:"greenback", top:-2.5, left:.5, width:2, height:2, func:function(){closeGreen();}},
 ];
 function getRingtone(){
-  openUrl('https://jambots.com/save/audio/Leave_a_Light_On-Ringtone.m4a');
+  if(device.platform=="iOS"){
+    openUrl('https://jambots.com/save/audio/Leave_a_Light_On-Ringtone.m4a');
+  } else{
+    openUrl('https://jambots.com/save/audio/Leave_a_Light_On-Ringtone.mp3');
+  }  
 }
 function closeGreen(){
   document.getElementById('greendiv').style.display="none";
