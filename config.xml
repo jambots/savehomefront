@@ -37,9 +37,7 @@
     <false/>
 </gap:config-file>
 
-<plugin spec="https://github.com/dpa99c/cordova-android-support-gradle-release" source="git" >
-<variable name="ANDROID_SUPPORT_VERSION" value="26.0.0"/>
-</plugin>
+<preference name="android-minSdkVersion" value="26" />  
 
 <gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
 <gap:plugin name="cordova-plugin-flashlight" source="npm" />
