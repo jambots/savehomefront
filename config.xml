@@ -38,9 +38,10 @@
 </gap:config-file>
 
 <preference name="android-minSdkVersion" value="26" />  
-
+<!--
 <gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
 <gap:plugin name="cordova-plugin-flashlight" source="npm" />
+-->
 <!--
 <gap:config-file platform="android" parent="/manifest">
      <application android:debuggable="true" />
