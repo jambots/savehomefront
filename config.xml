@@ -3,11 +3,11 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
         xmlns:android = "http://schemas.android.com/apk/res/android"
         id        = "com.jambots.savehomefront"
-        versionCode="5" 
-        version   = "1.5">
+        versionCode="6" 
+        version   = "1.6">
 
     <!-- versionCode is optional and Android only -->
-<preference name="phonegap-version" value="cli-7.1.0" />
+<preference name="phonegap-version" value="cli-6.3.1" />
     <name>S.A.V.E. HOME FRONT</name>
     <description>Selfless Service * Advocacy * Veteran * Emergency</description>
 <gap:platform name="ios">
