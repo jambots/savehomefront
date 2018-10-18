@@ -609,7 +609,7 @@ function drawKeys(){
     var atKey=keyArray[k].replace("b","♭");
     if(k==keyNum){
       steelCtx.strokeStyle="white";
-      steelCtx.strokeText(atKey, leftPad+grid*15.25, topPad+g*k+.5*g);
+      steelCtx.strokeText(atKey, leftPad+grid*15.15, topPad+g*k+.5*g);
     }
 
     if(k==keySelection){
