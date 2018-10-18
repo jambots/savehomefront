@@ -192,8 +192,8 @@ function handleSteelEvent(e){
         touchesById[t.identifier]=t;
       }
       else{
-        touchesById[t.identifier].pageX=t.pageX;// this was auto for touches
-        touchesById[t.identifier].pageY=t.pageY;// this was auto for touches, 
+        ////touchesById[t.identifier].pageX=t.pageX;// this was auto for touches
+        ////touchesById[t.identifier].pageY=t.pageY;// this was auto for touches, 
         //test that shim doesn't break
       }
     }

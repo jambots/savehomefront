@@ -226,8 +226,15 @@ function openGreen(){
   document.getElementById('greendiv').style.display="block";
   document.getElementById('wrapper').style.display="none";
 }
+
 function init(){
+  console.log('init()');
+  document.addEventListener("deviceready", "resumeInit", false);
+}
+function resumeInit(){
+  console.log('resumeInit()');
   canv=document.getElementById('steelCanvas');
+
   canv.addEventListener('touchstart', touchStart, false);
   canv.addEventListener('touchmove', touchMove, false);
   canv.addEventListener('touchend', touchEnd, false);
@@ -252,7 +259,7 @@ function touchStart(event){
   handleSteelEvent(event);
 }
 function touchMove(event){
-  console.log('touchmove');
+ // alert('touchMove');
   event.preventDefault ();
   handleSteelEvent(event);
 }
@@ -260,6 +267,7 @@ function touchEnd(event){
   event.preventDefault();
   handleSteelEvent(event);
 }
+/*
 var mouseDragging=false;
 function mouseDown(event){
   event.preventDefault();
@@ -280,7 +288,7 @@ function mouseUp(event){
   handleSteelEvent({type:"touchend",touches:[]});
   mouseDragging=false;
 }
-
+*/
 function imageLoaded(){
   //console.log('imageLoaded')
   geometry();
@@ -289,7 +297,7 @@ var helmsImage=null;
 var triadImage=null;
 </script>
 
-<body onload="init();">
+<body onload="init()">
 
 <!--
   <script>
