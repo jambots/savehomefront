@@ -22,10 +22,10 @@
     <activity android:launchMode="singleInstance" />
 </gap:config-file>
 <preference name="fullscreen" value="true" />
-<preference name="orientation" value="portrait" />
 <gap:splash src="res/splash.png" />
 <access origin="*" />
 <!--
+<preference name="orientation" value="portrait" />
 <allow-navigation href="https://www.jambots.com" />
 -->
 
