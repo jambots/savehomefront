@@ -7,8 +7,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" type="text/css" href="reset-min.css">
-<script src="steel.js"></script>
-<script src="steel.js"></script>
 <style type="text/css">
 body, html{width:100%; height:100%; overflow:hidden; scrollbars:none; font-family:batmanforeveralternateregular;}
 #wrapper{width:100%; height:100%; display:block;}
@@ -28,6 +26,7 @@ body{background-image:url("images/bgimagelarge.jpg"); background-size:cover; bac
 
 }
 </style>
+<script src="steel.js?4"></script>
 <script src="cordova.js"></script>
 <script>
 var canv;
@@ -102,6 +101,7 @@ function setupButtons(){
     });
     el.addEventListener("touchstart", function(evt){
       handleEvent(evt)
+      
     });
     
   }
@@ -136,6 +136,7 @@ function portraitGeometry(){
   style.innerHTML +='body{font-size:'+grid/2.5+'px;}';
   style.innerHTML +='#wrapper{display:block;}';
   style.innerHTML +='#steelCanvas{display:none;}';
+  style.innerHTML +='#steelControls{display:none;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
   style.innerHTML +='#loadingDiv{display:block; height:'+grid*4+'px; width:'+grid*4+'px;}';
   style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
@@ -232,17 +233,21 @@ function init(){
   console.log('init()');
   document.addEventListener("deviceready", resumeInit, false);
 }
+var controls;
 function resumeInit(){
   console.log('resumeInit()');
   canv=document.getElementById('steelCanvas');
+  controls=document.getElementById('steelControls');
+  controls.addEventListener('touchstart', touchStart, false);
+  controls.addEventListener('touchmove', touchMove, false);
+  controls.addEventListener('touchend', touchEnd, false);
+
 /*
 
-  canv.addEventListener('touchstart', touchStart, false);
-  canv.addEventListener('touchmove', touchMove, false);
-  canv.addEventListener('touchend', touchEnd, false);
-  canv.addEventListener('mousedown', mouseDown, false);
-  canv.addEventListener('mousemove', mouseMove, false);
-  canv.addEventListener('mouseup', mouseUp, false);
+
+  controls.addEventListener('mousedown', mouseDown, false);
+  controls.addEventListener('mousemove', mouseMove, false);
+  controls.addEventListener('mouseup', mouseUp, false);
 */
   setupButtons();
   geometryTick();
@@ -255,20 +260,33 @@ function resumeInit(){
   triadImage.addEventListener("load", imageLoaded, false);
   triadImage.src = "imageslarge/bg_triad.png"
 }
-function touchStart(event){
-  event.preventDefault ();
-  handleSteelEvent(event);
+function touchStart(evt){
+  evt.preventDefault ();
+
+      var syn={type:"touchstart", touches:[]};
+      for (var t=0; t<evt.touches.length; t++){
+        syn.touches.push({identifier:evt.touches[t].identifier, pageX:evt.touches[t].pageX, pageY:evt.touches[t].pageY});
+      }
+
+  handleSteelEvent(syn);
 }
-function touchMove(event){
+function touchMove(evt){
  // alert('touchMove');
-  event.preventDefault ();
-  handleSteelEvent(event);
+  evt.preventDefault ();
+      var syn={type:"touchmove", touches:[]};
+      for (var t=0; t<evt.touches.length; t++){
+        syn.touches.push({identifier:evt.touches[t].identifier, pageX:evt.touches[t].pageX, pageY:evt.touches[t].pageY});
+      }
+
+  handleSteelEvent(syn);
 }
-function touchEnd(event){
-  event.preventDefault();
-  handleSteelEvent(event);
+function touchEnd(evt){
+  evt.preventDefault();
+      var syn={type:"touchend", touches:[]};
+
+  handleSteelEvent(syn);
 }
-/*
+
 var mouseDragging=false;
 function mouseDown(event){
   event.preventDefault();
@@ -289,7 +307,7 @@ function mouseUp(event){
   handleSteelEvent({type:"touchend",touches:[]});
   mouseDragging=false;
 }
-*/
+
 function imageLoaded(){
   //console.log('imageLoaded')
   geometry();
@@ -337,6 +355,7 @@ As this light shines, it shows that through us, the mission continues.<br /><br 
   </div>
 
   <canvas id="steelCanvas"></canvas>
+  <div id="steelControls" style=""></div>
   <div id="loadingDiv" style=""></div>
 </body>
 </html>

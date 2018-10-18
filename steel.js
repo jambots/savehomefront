@@ -127,7 +127,7 @@ function keyTick(){
   drawKeys();
 }
 function handleSteelEvent(e){
-  //console.log(e);
+  //console.log(e.type);
   if((e.type=="touchstart")&&(e.touches.length==1)){
     if(e.touches[0].pageX>leftPad+grid*15){
       var fieldY=e.touches[0].pageY-topPad;
@@ -189,11 +189,12 @@ function handleSteelEvent(e){
       newTouchIdArray.push(t.identifier);
       if(prevTouchIdGlom.indexOf(t.identifier)==-1){
         // so we don't overwrite extant touches
-        touchesById[t.identifier]=t;
+        touchesById[t.identifier]=e.touches[tNum];
       }
       else{
-        ////touchesById[t.identifier].pageX=t.pageX;// this was auto for touches
-        ////touchesById[t.identifier].pageY=t.pageY;// this was auto for touches, 
+        //console.log("! "+t.pageX+" "+t.identifier);
+        touchesById[t.identifier].pageX=t.pageX;// this was auto for touches
+        touchesById[t.identifier].pageY=t.pageY;// this was auto for touches, 
         //test that shim doesn't break
       }
     }
@@ -240,7 +241,7 @@ function handleSteelEvent(e){
       thisVoice=thisTouch.voice;
       thisX=Math.floor((thisTouch.pageX-leftPad)/cellSize);
       thisY=Math.floor((thisTouch.pageY-topPad)/(grid*9/2));
-      console.log(thisX+" "+thisY);
+      //console.log(thisX+" "+thisY);
       if(thisX<0){thisX=0;}
       if(thisX>11){thisX=11;}
       if(thisY<0){thisY=0;}
@@ -256,7 +257,7 @@ function handleSteelEvent(e){
       // to set sustainer intervals 
       //if(thisY==0){sustainSound="hi_"+thisX+"_s";}
       //else{sustainSound="lo_"+thisX+"_s";}  
-
+      
       if(thisY==0){
         attackSound="banks/helms_"+keyName+"/"+thisX+"-a.mp3";
         sustainSound="banks/helms_"+keyName+"/"+thisX+"-s.mp3";
@@ -313,13 +314,17 @@ function handleSteelEvent(e){
       thisTouch=touchesById[thisId];
       thisX=Math.floor((thisTouch.pageX-leftPad)/cellSize);
       thisY=Math.floor((thisTouch.pageY-topPad)/(grid*9/2));
+
       if(thisX<0){thisX=0;}
       if(thisX>11){thisX=11;}
       if(thisY<0){thisY=0;}
       if(thisY>1){thisY=1;}
       xMove=thisX - touchesById[thisId].x;
       yMove=thisY - touchesById[thisId].y;
+      //console.log("* touchIdStack touch pageX="+thisTouch.pageX+" thisX "+thisX+" x:"+touchesById[thisId].x+" id "+thisId);
+
       touchesById[thisId].y=thisY;
+      touchesById[thisId].x=thisX;
       if(xMove != 0){
         // x moved
         //dbug2("<br>xMove: "+xMove);
@@ -357,7 +362,7 @@ function handleSteelEvent(e){
           useSound="error";
           if(xMove<0){useSound=thisX+"-d";}
           if(xMove>0){useSound=thisX+"-u";}
-
+          //console.log("xMove "+xMove);
           if(touchesById[thisId].chromatic==true){
             touchesById[thisId].chromatic=false;
             useSound+="c";
@@ -537,7 +542,7 @@ function sourceBuffer(buffer) {
   return source;
 }
 function playSource(source){
-  console.log('playSource ');
+  //console.log('playSource ');
   source.start(0);
 }
 var cellSize=1;
@@ -545,7 +550,7 @@ var grid=1;
 var topPad=0;
 var leftPad=0;
 function landscapeGeometry(){
-  //console.log('landscapeGeometry');
+  console.log('landscapeGeometry');
   
   var windowAspect=ww/wh;
   grid=1;
@@ -567,7 +572,8 @@ function landscapeGeometry(){
   style.innerHTML='';
   style.innerHTML +='body{font-size:'+grid/2.5+'px;}';
   style.innerHTML +='#wrapper{display:none;}';
-  style.innerHTML +='#steelCanvas{display:block;}';
+  style.innerHTML +='#steelCanvas{display:block;position:absolute;}';
+  style.innerHTML +='#steelControls{display:block;position:absolute;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
   style.innerHTML +='#loadingDiv{display:block; height:'+grid*4+'px; width:'+grid*4+'px;}';
   style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
@@ -575,6 +581,8 @@ function landscapeGeometry(){
   var steelCanv=document.getElementById('steelCanvas');
   steelCanv.width=ww;
   steelCanv.height=wh;
+  controls.style.width=ww+"px";
+  controls.style.height=wh+"px";
 
   var steelCtx=steelCanv.getContext('2d');
   if(helmsImage !==null){

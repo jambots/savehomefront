@@ -1,0 +1,1 @@
+window.setTimeout("resumeInit()", 1000);
