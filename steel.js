@@ -597,7 +597,7 @@ function drawKeys(){
   var steelCanv=document.getElementById('steelCanvas');
   var steelCtx=steelCanv.getContext('2d');
   steelCtx.lineJoin="round";
-  steelCtx.clearRect(leftPad+grid*15, topPad, grid, grid*9);
+  steelCtx.clearRect(leftPad+grid*14.5, topPad, grid*1.5, grid*9);
   steelCtx.textAlign="left";
   steelCtx.textBaseline="middle";
   var g=grid*9/12;
@@ -609,7 +609,7 @@ function drawKeys(){
     var atKey=keyArray[k].replace("b","♭");
     if(k==keyNum){
       steelCtx.strokeStyle="white";
-      steelCtx.strokeText(atKey, leftPad+grid*15.15, topPad+g*k+.5*g);
+      steelCtx.strokeText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
     }
 
     if(k==keySelection){
@@ -619,10 +619,10 @@ function drawKeys(){
       } else {
         steelCtx.strokeStyle="blue";
       }
-      steelCtx.strokeText(atKey, leftPad+grid*15.25, topPad+g*k+.5*g);
+      steelCtx.strokeText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
     }
     steelCtx.fillStyle="black";
    
-    steelCtx.fillText(atKey, leftPad+grid*15.25, topPad+g*k+.5*g);
+    steelCtx.fillText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
   }
 }
