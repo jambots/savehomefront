@@ -231,10 +231,11 @@ function init(){
   canv.addEventListener('touchstart', touchStart, false);
   canv.addEventListener('touchmove', touchMove, false);
   canv.addEventListener('touchend', touchEnd, false);
+/*
   canv.addEventListener('mousedown', mouseDown, false);
   canv.addEventListener('mousemove', mouseMove, false);
   canv.addEventListener('mouseup', mouseUp, false);
-
+*/
   setupButtons();
   geometryTick();
   window.setInterval("geometryTick()",1000);
@@ -251,6 +252,7 @@ function touchStart(event){
   handleSteelEvent(event);
 }
 function touchMove(event){
+  console.log('touchmove');
   event.preventDefault ();
   handleSteelEvent(event);
 }

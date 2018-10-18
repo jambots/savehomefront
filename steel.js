@@ -81,7 +81,7 @@ var comQueue=[];
 var sources=[];
 function comTick(){
   for (var c=0; c<comQueue.length; c++){
-    console.log(comQueue[c]);
+    //console.log(comQueue[c]);
     
     if(comQueue[c].mode=="play"){
       var sound={source:sourceBuffer(buffersByUrl[comQueue[c].sound]), channel:comQueue[c].channel};
@@ -105,7 +105,7 @@ function comTick(){
     }
   }
   comQueue=[];
-  console.log(sources);
+  //console.log(sources);
 }
 var keySources=[];
 var keySelection=-1;
@@ -117,9 +117,10 @@ var keyArray=["C", "F", "Bb", "Eb", "Ab", "Db", "Gb", "B", "E", "A", "D", "G"];
 var keyName="A";
 var keyNum=9;
 var keySources=[];
+
 function keyTick(){
   var keyUrl="banks/triad_"+keyArray[keySelection]+"/0-s.mp3";
-  console.log(keyUrl);
+  //console.log(keyUrl);
   var sound=sourceBuffer(buffersByUrl[keyUrl]);
   keySources.push({source:sound});
   sound.start(0);
@@ -136,7 +137,7 @@ function handleSteelEvent(e){
       if(y>11){y=11;}
       mode="key";
       keySelection=y;
-      console.log(mode+" "+keySelection);
+      //console.log(mode+" "+keySelection);
       window.clearInterval(keyInterval);
       keyInterval=window.setInterval("keyTick()", 300);
       keyTick();
@@ -277,7 +278,7 @@ function handleSteelEvent(e){
       thisTouch=touchesById[thisId];
       var attackChannel=thisTouch.attackChannel;
       var sustainChannel=thisTouch.sustainChannel;
-      console.log('sustainChannel: '+sustainChannel);
+      //console.log('sustainChannel: '+sustainChannel);
       comQueue.push({channel:attackChannel, mode:"pause"});
       comQueue.push({channel:sustainChannel, mode:"pause"});
       sustainChannel++;
