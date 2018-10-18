@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" type="text/css" href="reset-min.css">
+<script src="steel.js"></script>
 <style type="text/css">
 body, html{width:100%; height:100%; overflow:hidden; scrollbars:none; font-family:batmanforeveralternateregular;}
 #wrapper{width:100%; height:100%; display:block;}
@@ -28,6 +29,7 @@ body{background-image:url("images/bgimagelarge.jpg"); background-size:cover; bac
 </style>
 <script src="phonegap.js"></script>
 <script>
+var canv;
 function openUrl(url){
 cordova.InAppBrowser.open(url, "_system")
 }
@@ -70,12 +72,9 @@ function handleEvent(e){
   }
 }
 
-function init(){
-  setupButtons();
-  geometryTick();
 
-  window.setInterval("geometryTick()",1000);
-}
+
+
 
 function geometryTick(){
   if((ww != window.innerWidth)||(wh != window.innerHeight)){
@@ -87,6 +86,7 @@ function geometryTick(){
 var ww=1;
 var wh=1;
 function setupButtons(){
+  console.log('setupButtons');
   var style = document.createElement('style');
   style.type = 'text/css';
   style.innerHTML ='';
@@ -104,14 +104,20 @@ function setupButtons(){
     });
     
   }
+
 }
+
 function rnd(range){
   return Math.floor(Math.random()*range);
 }
 function geometry(){
+  if(ww/wh<1){portraitGeometry();}
+  else{landscapeGeometry();}// is in steel.js
+}
+function portraitGeometry(){
+  var windowAspect=ww/wh;
   var grid=1;
   var contentAspect=10/15;
-  var windowAspect=ww/wh;
   var topPad=0;
   var leftPad=0;
   if(contentAspect>windowAspect){//wide, pad top
@@ -127,6 +133,12 @@ function geometry(){
   style.type = 'text/css';
   style.innerHTML='';
   style.innerHTML +='body{font-size:'+grid/2.5+'px;}';
+  style.innerHTML +='#wrapper{display:block;}';
+  style.innerHTML +='#steelCanvas{display:none;}';
+  style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
+  style.innerHTML +='#loadingDiv{display:block; height:'+grid*4+'px; width:'+grid*4+'px;}';
+  style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
+  
   for (var b=0; b<buttons.length; b++){  
     console.log(buttons[b]);
     var button=buttons[b];
@@ -184,6 +196,7 @@ function clickPlay(e){
     e.cancelBubble = true;}  
   if (e.stopPropagation){e.stopPropagation();}
 }
+
 var buttons=[
 {id:"shflogo", top:.5, left:3, width:4, height:2, func:function(){openUrl('http://www.savehomefront.org');}},
 {id:"helpup", top:2.5, left:.5, width:9, height:1, func:function(){openUrl('https://youtu.be/ajtE1ymZdTA');}},
@@ -213,9 +226,69 @@ function openGreen(){
   document.getElementById('greendiv').style.display="block";
   document.getElementById('wrapper').style.display="none";
 }
+function init(){
+  canv=document.getElementById('steelCanvas');
+  canv.addEventListener('touchstart', touchStart, false);
+  canv.addEventListener('touchmove', touchMove, false);
+  canv.addEventListener('touchend', touchEnd, false);
+  canv.addEventListener('mousedown', mouseDown, false);
+  canv.addEventListener('mousemove', mouseMove, false);
+  canv.addEventListener('mouseup', mouseUp, false);
+
+  setupButtons();
+  geometryTick();
+  window.setInterval("geometryTick()",1000);
+  initAudio();
+  helmsImage = new Image();
+  helmsImage.addEventListener("load", imageLoaded, false);
+  helmsImage.src = "imageslarge/bg_helms.png";
+  triadImage = new Image();
+  triadImage.addEventListener("load", imageLoaded, false);
+  triadImage.src = "imageslarge/bg_triad.png"
+}
+function touchStart(event){
+  event.preventDefault ();
+  handleSteelEvent(event);
+}
+function touchMove(event){
+  event.preventDefault ();
+  handleSteelEvent(event);
+}
+function touchEnd(event){
+  event.preventDefault();
+  handleSteelEvent(event);
+}
+var mouseDragging=false;
+function mouseDown(event){
+  event.preventDefault();
+  //console.log(event);
+  handleSteelEvent({type:"touchstart", touches:[{identifier:99, pageX:event.clientX, pageY:event.clientY}]});
+  mouseDragging=true;
+}
+function mouseMove(event){
+  event.preventDefault();
+  if(mouseDragging){
+    //console.log(event);
+    handleSteelEvent({type:"touchmove", touches:[{identifier:99, pageX:event.clientX, pageY:event.clientY}]});
+  }
+}
+function mouseUp(event){
+  event.preventDefault();
+  //console.log(event);
+  handleSteelEvent({type:"touchend",touches:[]});
+  mouseDragging=false;
+}
+
+function imageLoaded(){
+  //console.log('imageLoaded')
+  geometry();
+}
+var helmsImage=null;
+var triadImage=null;
 </script>
 
 <body onload="init();">
+
 <!--
   <script>
       (function(d, s, id) {
@@ -228,6 +301,7 @@ function openGreen(){
   </script>
 -->
   <div id="wrapper" >
+    <div id="icon" class="button"></div>
     <div id="shflogo" class="button"></div>
     <div id="greenlight" class="button"></div><div id="bell" class="button"></div>
     <div id="flashlight" class="button"></div><div id="donate" class="button"></div>
@@ -251,7 +325,7 @@ As this light shines, it shows that through us, the mission continues.<br /><br 
     <div id="greenback" class="button"></div>
   </div>
 
-
-
+  <canvas id="steelCanvas"></canvas>
+  <div id="loadingDiv" style=""></div>
 </body>
 </html>
