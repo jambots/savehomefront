@@ -549,50 +549,6 @@ var cellSize=1;
 var grid=1;
 var topPad=0;
 var leftPad=0;
-function landscapeGeometry(){
-  console.log('landscapeGeometry');
-  
-  var windowAspect=ww/wh;
-  grid=1;
-  var contentAspect=16/9;
-  topPad=0;
-  leftPad=0;
-  if(contentAspect>windowAspect){//wide, pad top
-    grid=ww/16;
-    topPad=(wh-grid*9)/2;
-  } else {// tall pad side
-    grid=wh/9;
-    leftPad=(ww-grid*16)/2;
-  }
-  cellSize=grid*14/12;
-  //console.log(grid);
-
-  var style = document.createElement('style');
-  style.type = 'text/css';
-  style.innerHTML='';
-  style.innerHTML +='body{font-size:'+grid/2.5+'px;}';
-  style.innerHTML +='#wrapper{display:none;}';
-  style.innerHTML +='#steelCanvas{display:block;position:absolute;}';
-  style.innerHTML +='#steelControls{display:block;position:absolute;}';
-  style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
-  style.innerHTML +='#loadingDiv{display:block; height:'+grid*4+'px; width:'+grid*4+'px;}';
-  style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
-  document.getElementsByTagName('head')[0].appendChild(style);
-  var steelCanv=document.getElementById('steelCanvas');
-  steelCanv.width=ww;
-  steelCanv.height=wh;
-  controls.style.width=ww+"px";
-  controls.style.height=wh+"px";
-
-  var steelCtx=steelCanv.getContext('2d');
-  if(helmsImage !==null){
-    steelCtx.drawImage(helmsImage,leftPad,topPad,grid*14,grid*4.5);
-  }
-  if(triadImage !==null){
-    steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
-  }
-  drawKeys();
-}
 function drawKeys(){
   var steelCanv=document.getElementById('steelCanvas');
   var steelCtx=steelCanv.getContext('2d');
