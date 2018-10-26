@@ -11,7 +11,6 @@
 body, html{width:100%; height:100%; overflow:hidden; scrollbars:none; font-family:batmanforeveralternateregular;}
 #wrapper{width:100%; height:100%;}
 #greendiv{width:100%; height:100%;background-image:url("images/greenburst.jpg"); background-size:cover; background-position:50% 50%;}
-#flashdiv{width:100%; height:100%; display:none; background-color:white;}
 #dl{position:absolute; width:80px; height:60px; bottom:4px; left:4px;}
 #player{position:absolute; width:60px; height:60px; bottom:4px; right:4px;}
 #greentext{text-align:center; position:absolute;}
@@ -66,9 +65,19 @@ function portraitGeometry(){
   style.type = 'text/css';
   style.innerHTML='';
   style.innerHTML +='body{font-size:'+grid/2.5+'px;}';
-  style.innerHTML +='#wrapper{display:block;}';
-  if(greenUp){style.innerHTML +='#greenDiv{display:block;}';}
-  else{style.innerHTML +='#greenDiv{display:none;}';}
+  if(greenUp){
+    console.log('greenUp');
+    style.innerHTML +='#greenDiv{display:block;}';
+    style.innerHTML +='#greentext{display:block;}';
+    style.innerHTML +='#greenback{display:block;}';
+    style.innerHTML +='#wrapper{display:none;}';
+  } else {
+    console.log('NOT greenUp');
+    style.innerHTML +='#greenDiv{display:none;}';
+    style.innerHTML +='#greentext{display:none;}';
+    style.innerHTML +='#greenback{display:none;}';
+    style.innerHTML +='#wrapper{display:block;}';
+  }
   style.innerHTML +='#steelCanvas{display:none;}';
   style.innerHTML +='#steelControls{display:none;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
@@ -93,6 +102,7 @@ function portraitGeometry(){
     style.innerHTML +='#'+button.id+'{width:'+(button.width*grid)+'px; height:'+(button.height*grid)+'px;}';
   }
   document.getElementsByTagName('head')[0].appendChild(style);
+  console.log('greentext '+document.getElementById('greentext').style.display);
 }
 
 function landscapeGeometry(){
@@ -119,12 +129,15 @@ function landscapeGeometry(){
   style.innerHTML +='body{font-size:'+grid/2.5+'px;}';
   style.innerHTML +='#wrapper{display:none;}';
   style.innerHTML +='#greenDiv{display:none;}';
+  style.innerHTML +='#greentext{display:none;}';
+  style.innerHTML +='#greenback{display:none;}';
   style.innerHTML +='#steelCanvas{display:block; position:absolute;}';
   style.innerHTML +='#steelControls{display:block; position:absolute;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
   style.innerHTML +='#loadingDiv{display:block; height:'+grid*4+'px; width:'+grid*4+'px;}';
   style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
   document.getElementsByTagName('head')[0].appendChild(style);
+
   var steelCanv=document.getElementById('steelCanvas');
   steelCanv.width=ww;
   steelCanv.height=wh;
@@ -362,19 +375,16 @@ var triadImage=null;
     <div id="facebook" class="button"></div><div id="twitter" class="button"></div>
     <div id="instagram" class="button"></div><div id="youtube" class="button"></div>
     <div id="helpup" class="button"></div>
- </div>
-  <div id="flashdiv">
-    <div id="flashback" class="button"></div>
   </div>
   <div id="greendiv">
     <div id="greentext" class="button">
-    <b>What The Green Light Means</b><br /><br />
-You’re letting Veterans know you support them as they leave military service and become your
-community neighbor.<br /><br />
-Let this light shine from your home, workplace or phone.<br /><br />
-Green is a powerful color, meaning growth, possibility, beginnings.<br /><br />
-As this light shines, it shows that through us, the mission continues.<br /><br />
-<b>Leave A Light On</b><br />to show your support!
+      <b>What The Green Light Means</b><br /><br />
+      You’re letting Veterans know you support them as they leave military service and become your
+      community neighbor.<br /><br />
+      Let this light shine from your home, workplace or phone.<br /><br />
+      Green is a powerful color, meaning growth, possibility, beginnings.<br /><br />
+      As this light shines, it shows that through us, the mission continues.<br /><br />
+      <b>Leave A Light On</b><br />to show your support!
     </div>
     <div id="greenback" class="button"></div>
   </div>
