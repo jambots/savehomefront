@@ -365,7 +365,7 @@ function openGreen(){
 function init(){
   //console.log('init()');
   getFeeds();
-  new ScrollFix(document.getElementById('feeds'));
+  //new ScrollFix(document.getElementById('feeds'));
   document.addEventListener("deviceready", resumeInit, false);
 }
 var controls;
@@ -519,7 +519,7 @@ var triadImage=null;
   <div id="wrapper" >
     <div id="helpup" class="button"></div>
     <div id="shflogo" class="button"></div>
-    <div id="feeds" style="overflow:scroll;"></div>
+    <div id="feeds" style="overflow-y: scroll; -webkit-overflow-scrolling: touch; overflow:scroll;"></div>
     <div id="greenlight" class="button"></div><div id="bell" class="button"></div>
     <div id="flashlight" class="button"></div><div id="donate" class="button"></div>
     <div id="facebook" class="button"></div><div id="twitter" class="button"></div>
