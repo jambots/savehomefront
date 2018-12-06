@@ -3,8 +3,8 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
         xmlns:android = "http://schemas.android.com/apk/res/android"
         id        = "com.jambots.savehomefront"
-        versionCode="9" 
-        version   = "1.9">
+        versionCode="11"
+        version   = "1.11">
 
     <!-- versionCode is optional and Android only -->
 <preference name="phonegap-version" value="cli-7.1.0" />
@@ -37,7 +37,7 @@
     <false/>
 </gap:config-file>
 
-<preference name="android-minSdkVersion" value="19" />  
+<preference name="android-minSdkVersion" value="19" />
 
 <gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
 <gap:plugin name="cordova-plugin-flashlight" source="npm" />

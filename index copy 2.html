@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="scrollfix.js"></script>
 <link rel="stylesheet" type="text/css" href="reset-min.css">
 <style type="text/css">
 body, html{width:100%; height:100%; overflow:hidden; scrollbars:none; font-family:batmanforeveralternateregular;}
@@ -49,9 +47,9 @@ function geometry(){
   document.getElementById('greendiv').style.display="none";
   document.getElementById('wrapper').style.display="block";
 */
-var grid=1;
 function portraitGeometry(){
   var windowAspect=ww/wh;
+  var grid=1;
   var contentAspect=10/15;
   var topPad=0;
   var leftPad=0;
@@ -62,20 +60,20 @@ function portraitGeometry(){
     grid=wh/15;
     leftPad=(ww-grid*10)/2;
   }
-  //console.log(grid);
+  console.log(grid);
 
   var style = document.createElement('style');
   style.type = 'text/css';
   style.innerHTML='';
   style.innerHTML +='body{font-size:'+grid/2.5+'px;}';
   if(greenUp){
-    //console.log('greenUp');
+    console.log('greenUp');
     style.innerHTML +='#greendiv{display:block;}';
     style.innerHTML +='#greentext{display:block;}';
     style.innerHTML +='#greenback{display:block;}';
     style.innerHTML +='#wrapper{display:none;}';
   } else {
-    //console.log('NOT greenUp');
+    console.log('NOT greenUp');
     style.innerHTML +='#greendiv{display:none;}';
     style.innerHTML +='#greentext{display:none;}';
     style.innerHTML +='#greenback{display:none;}';
@@ -86,14 +84,14 @@ function portraitGeometry(){
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
   style.innerHTML +='#loadingDiv{height:'+grid*4+'px; width:'+grid*4+'px;}';
   style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
-
-  for (var b=0; b<buttons.length; b++){
-    //console.log(buttons[b]);
+  
+  for (var b=0; b<buttons.length; b++){  
+    console.log(buttons[b]);
     var button=buttons[b];
     var top;
     if(button.top=="m"){
       top=(wh-button.height*grid)/2;
-      //console.log(top);
+      console.log(top);
     }
     else{
       top =(button.top*grid);
@@ -104,14 +102,13 @@ function portraitGeometry(){
     style.innerHTML +='#'+button.id+'{left:'+(leftPad+button.left*grid)+'px; top:'+top+'px;}';
     style.innerHTML +='#'+button.id+'{width:'+(button.width*grid)+'px; height:'+(button.height*grid)+'px;}';
   }
-  style.innerHTML +='#feeds{width:'+(9*grid)+'px; height:'+(wh-8*grid)+'px; top:'+(2.5*grid)+'px; left:'+(.5*grid)+'px; background-color:white; position:absolute;}';
   document.getElementsByTagName('head')[0].appendChild(style);
-
+  
 }
 
 function landscapeGeometry(){
-  //console.log('landscapeGeometry');
-
+  console.log('landscapeGeometry');
+  
   var windowAspect=ww/wh;
   grid=1;
   var contentAspect=16/9;
@@ -171,7 +168,7 @@ function flashlightOn(){
         function() {}, // optional success callback
         function() {}, // optional error callback
         {intensity: 1} // optional as well, used on iOS when switching on
-      );
+      ); 
     } else {
       alert("Flashlight not available on this device");
     }
@@ -205,11 +202,11 @@ function handleEvent(e){
 
 
 function setupButtons(){
-  //console.log('setupButtons');
+  console.log('setupButtons');
   var style = document.createElement('style');
   style.type = 'text/css';
   style.innerHTML ='';
-  for (var b=0; b<buttons.length; b++){
+  for (var b=0; b<buttons.length; b++){  
     var button=buttons[b];
     //style.innerHTML +='#'+button.id+'{background-color:rgba('+rnd(255)+',0,255,.5);}';
     style.innerHTML +='#'+button.id+'{background-image:url("images/'+button.id+'.png");}';
@@ -220,9 +217,9 @@ function setupButtons(){
     });
     el.addEventListener("touchstart", function(evt){
       handleEvent(evt)
-
+      
     });
-
+    
   }
 
 }
@@ -236,122 +233,32 @@ var logoUp=true;
 function clickPlay(e){
   playSound(this, 'teaser.mp3');
   if (!e){
-    var e = window.event;
-    e.cancelBubble = true;}
+    var e = window.event; 
+    e.cancelBubble = true;}  
   if (e.stopPropagation){e.stopPropagation();}
 }
 
 var buttons=[
 {id:"shflogo", top:.5, left:3, width:4, height:2, func:function(){openUrl('http://www.savehomefront.org');}},
 {id:"helpup", top:2.5, left:.5, width:9, height:1, func:function(){openUrl('https://youtu.be/ajtE1ymZdTA');}},
-{id:"greenlight", top:-3.5, left:1, width:1.5, height:2.5, func:function(){openGreen();}},
-{id:"bell", top:-3.5, left:2.5, width:2.5, height:2.5, func:function(){getRingtone();}},
-{id:"donate", top:-3.5, left:5, width:2.5, height:2.5, func:function(){openUrl('https://portal.icheckgateway.com/SaveXXII/');}},
-{id:"flashlight", top:-3.5, left:7.5, width:1.5, height:2.5, func:function(){flashlightOn();}},
-{id:"facebook", top:-5.5, left:1, width:2, height:2, func:function(){openFeed('Facebook');}},
-{id:"twitter", top:-5.5, left:3, width:2, height:2, func:function(){openFeed('twitter');}},
-{id:"instagram", top:-5.5, left:5, width:2, height:2, func:function(){openFeed('Instagram');}},
-{id:"youtube", top:-5.5, left:7, width:2, height:2, func:function(){openFeed('YouTube');}},
+{id:"greenlight", top:-5.5, left:1, width:1.5, height:2.5, func:function(){openGreen();}},
+{id:"bell", top:-5.5, left:2.5, width:2.5, height:2.5, func:function(){getRingtone();}},
+{id:"donate", top:-5.5, left:5, width:2.5, height:2.5, func:function(){openUrl('https://portal.icheckgateway.com/SaveXXII/');}},
+{id:"flashlight", top:-5.5, left:7.5, width:1.5, height:2.5, func:function(){flashlightOn();}},
+{id:"facebook", top:-2.5, left:1, width:2, height:2, func:function(){openUrl('https://www.facebook.com/savehomefront.org/');}},
+{id:"twitter", top:-2.5, left:3, width:2, height:2, func:function(){openUrl('https://twitter.com/savehomefront');}},
+{id:"instagram", top:-2.5, left:5, width:2, height:2, func:function(){openUrl('https://www.instagram.com/savehomefront/');}},
+{id:"youtube", top:-2.5, left:7, width:2, height:2, func:function(){openUrl('https://www.youtube.com/channel/UC52CErEEsLZf23J3QRr04tw');}},
 {id:"steeltext", top:-.5, left:.5, width:9, height:1, func:function(){}},
 {id:"greentext", top:"m", left:.5, width:9, height:11, func:function(){closeGreen();}},
 {id:"greenback", top:-2.5, left:.5, width:2, height:2, func:function(){closeGreen();}},
 ];
-var feedsByNetwork={};
-function openFeed(network){
-  var rssUrl=networkRssUrl(network);
-  if(rssUrl != ""){
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        parseFeed(this);
-      }
-    };
-    xhttp.onloadend = function() {
-    if(xhttp.status == 404)
-      throw new Error(' doh! replied 404');
-    }
-    xhttp.open("GET", rssUrl, true);
-    xhttp.send();
-  } else{alert(network+' not available');}
-}
-var xmlResponse;
-var feedObj;
-function parseFeed(xml){
-  xmlResponse=xml.responseXML;
-  feedObj=xmlToJson(xmlResponse.children[0].children[0]);
-  console.log(feedObj);
-  var htmlBlock="";
-  for(var d=0; d<feedObj.item.length; d++){
-
-    var textStyle='padding-top:'+grid*.2+'px; width:'+ grid*8 +'px';
-    textStyle+=' line-height:'+ grid*2.5 +'px; background-color:yellow;'
-    textStyle+=' margin:'+ grid*.25 +'px; padding:'+ grid*.25 +'px; border:1px solid #666;'
-    //var gradStyle="background-image: -webkit-gradient(linear,left top,left bottom, color-stop(0%, #F2F2F2), color-stop(2%, #F2F2F2), color-stop(3%, #EDEDED), color-stop(50%, #fff), color-stop(100%, #fff));";
-    var gradStyle="";
-    var downloadItem=feedObj.item[d];
-    console.log(downloadItem);
-    htmlBlock+='<div style="'+textStyle+' '+gradStyle+' float:left;">';
-    if(downloadItem.hasOwnProperty('media:content')){
-      htmlBlock+=  '<a href="javascript:remoteLink(\''+downloadItem.link+'\');">';
-      htmlBlock+=  '<img src="'+downloadItem['media:content']['@attributes'].url+'" width='+grid*8 +' />';
-      htmlBlock+=  '</a>';
-    }
-    //htmlBlock+=  '<div style="border:1px solid black; width:'+grid*6+'px; background-color:blue;">'
-    //htmlBlock+=  '<a href="javascript:remoteLink(\''+downloadItem.link+'\');">'+downloadItem.title+'</a>';
-    //htmlBlock+=  '<br />'+downloadItem.dateStr+' ';
-    //htmlBlock+='</div>';
-    htmlBlock+='</div>';
-    }
-  document.getElementById('feeds').innerHTML=htmlBlock;
-  //document.getElementById('instHolder').style.width=grid*48+'px';
-  //document.getElementById('instHolder').style.height="100%";
-  console.log('feed completed')
-}
-function xmlToJson(xml) {
-
-	// Create the return object
-	var obj = {};
-
-	if (xml.nodeType == 1) { // element
-		// do attributes
-		if (xml.attributes.length > 0) {
-		obj["@attributes"] = {};
-			for (var j = 0; j < xml.attributes.length; j++) {
-				var attribute = xml.attributes.item(j);
-				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
-			}
-		}
-	} else if (xml.nodeType == 3) { // text
-		obj = xml.nodeValue;
-	}
-
-	// do children
-	if (xml.hasChildNodes()) {
-		for(var i = 0; i < xml.childNodes.length; i++) {
-			var item = xml.childNodes.item(i);
-			var nodeName = item.nodeName;
-			if (typeof(obj[nodeName]) == "undefined") {
-				obj[nodeName] = xmlToJson(item);
-			} else {
-				if (typeof(obj[nodeName].push) == "undefined") {
-					var old = obj[nodeName];
-					obj[nodeName] = [];
-					obj[nodeName].push(old);
-				}
-				obj[nodeName].push(xmlToJson(item));
-			}
-		}
-	}
-	return obj;
-};
-
 function getRingtone(){
   if(device.platform=="iOS"){
     openUrl('https://jambots.com/save/audio/Leave_a_Light_On-Ringtone.m4r');
   } else{
     openUrl('https://jambots.com/save/audio/Leave_a_Light_On-Ringtone.mp3');
-  }
+  }  
 }
 function closeGreen(){
   greenUp=false;
@@ -363,66 +270,12 @@ function openGreen(){
 }
 
 function init(){
-  //console.log('init()');
-  getFeeds();
-  new ScrollFix(document.getElementById('feeds'));
+  console.log('init()');
   document.addEventListener("deviceready", resumeInit, false);
 }
 var controls;
-var feeds=[];
-function getFeeds(){
-  //var url='http://jambots.com/save/bounce.php?endpoint=list';
-  var url='http://fetchrss.com/api/v1/feed/list?auth='+auth;
-  $.getJSON( url, function( data ) {
-    //var items = [];
-    feeds=data.feeds;
-    testFeeds();
-  });
-}
-var required=["twitter", "YouTube", "Instagram", "Facebook"];
-function testFeeds(){
-  var fails=[];
-
-  for (var r=0; r<required.length; r++){
-    var found=false;
-    for (var f=0; f<feeds.length; f++){
-      if(feeds[f].title.indexOf(required[r])>-1){found=true;}
-    }
-    if(found==false){fails.push(required[r]);}
-  }
-  console.log(fails);
-  if(fails.length>0){
-    createFeed(fails[0]);
-  }
-}
-function networkRssUrl(network){
-  var rssUrl="";
-  for (var f=0; f<feeds.length; f++){
-    if(feeds[f].title.indexOf(network)>-1){rssUrl=feeds[f].rss_url;}
-  }
-  return rssUrl;
-}
-var urlsByNetwork={
-  "YouTube":"https://www.youtube.com/channel/UC52CErEEsLZf23J3QRr04tw",
-  "Facebook":"https://www.facebook.com/savehomefront.org",
-  "Instagram":"https://www.instagram.com/savehomefront/",
-  "twitter":"https://twitter.com/savehomefront"
-}
-var auth="5c0738088a93f8091d8b4567.DV96Jg881iPW4OpU1";
-function createFeed(network){
-  var networkUrl=urlsByNetwork[network];
-  var url='http://fetchrss.com/api/v1/feed/create?url='+networkUrl+'&auth='+auth;
-  $.getJSON( url, function( data ) {
-    //var items = [];
-    console.log(data);
-
-    feeds.push=data.feed;
-    testFeeds();
-  });
-}
-
 function resumeInit(){
-  //console.log('resumeInit()');
+  console.log('resumeInit()');
   canv=document.getElementById('steelCanvas');
   controls=document.getElementById('steelControls');
   controls.addEventListener('touchstart', touchStart, false);
@@ -517,14 +370,14 @@ var triadImage=null;
   </script>
 -->
   <div id="wrapper" >
-    <div id="helpup" class="button"></div>
+    <div id="icon" class="button"></div>
     <div id="shflogo" class="button"></div>
-    <div id="feeds" style="overflow:scroll;"></div>
+    <div id="steeltext" class="button">Rotate to Play</div>
     <div id="greenlight" class="button"></div><div id="bell" class="button"></div>
     <div id="flashlight" class="button"></div><div id="donate" class="button"></div>
     <div id="facebook" class="button"></div><div id="twitter" class="button"></div>
     <div id="instagram" class="button"></div><div id="youtube" class="button"></div>
-    <div id="steeltext" class="button">Rotate to Play</div>
+    <div id="helpup" class="button"></div>
   </div>
   <div id="greendiv">
     <div id="greentext" class="button">
