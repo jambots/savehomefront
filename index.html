@@ -304,6 +304,7 @@ function parseFeed(xml){
     htmlBlock+='</div>';
     }
   document.getElementById('feeds').innerHTML=htmlBlock;
+  document.getElementById('feeds').style.webkitOverflowScrolling="touch";
   //document.getElementById('instHolder').style.width=grid*48+'px';
   //document.getElementById('instHolder').style.height="100%";
   console.log('feed completed')
@@ -365,7 +366,7 @@ function openGreen(){
 function init(){
   //console.log('init()');
   getFeeds();
-  //new ScrollFix(document.getElementById('feeds'));
+  new ScrollFix(document.getElementById('feeds'));
   document.addEventListener("deviceready", resumeInit, false);
 }
 var controls;
