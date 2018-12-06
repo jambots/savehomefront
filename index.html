@@ -495,7 +495,9 @@ function mouseUp(event){
   handleSteelEvent({type:"touchend",touches:[]});
   mouseDragging=false;
 }
-
+function scrollStop(){
+  console.log(body.scrollTop);
+}
 function imageLoaded(){
   //console.log('imageLoaded')
   geometry();
@@ -520,7 +522,7 @@ var triadImage=null;
   <div id="wrapper" >
     <div id="helpup" class="button"></div>
     <div id="shflogo" class="button"></div>
-    <div id="feeds" style="overflow-y: scroll; -webkit-overflow-scrolling: touch; overflow:scroll;"></div>
+    <div id="feeds" onscroll="scrollStop()" style="overflow-y: scroll; -webkit-overflow-scrolling: touch; overflow:scroll;"></div>
     <div id="greenlight" class="button"></div><div id="bell" class="button"></div>
     <div id="flashlight" class="button"></div><div id="donate" class="button"></div>
     <div id="facebook" class="button"></div><div id="twitter" class="button"></div>
