@@ -244,14 +244,14 @@ var atNetwork="";
 var buttons=[
 {id:"shflogo", top:.5, left:3, width:4, height:2, func:function(){openUrl('http://www.savehomefront.org');}},
 {id:"helpup", top:2.5, left:.5, width:9, height:1, func:function(){openUrl('https://youtu.be/ajtE1ymZdTA');}},
-{id:"greenlight", top:-5.5, left:1, width:1.5, height:2.5, func:function(){openGreen();}},
-{id:"bell", top:-5.5, left:2.5, width:2.5, height:2.5, func:function(){getRingtone();}},
-{id:"donate", top:-5.5, left:5, width:2.5, height:2.5, func:function(){openUrl('https://portal.icheckgateway.com/SaveXXII/');}},
-{id:"flashlight", top:-5.5, left:7.5, width:1.5, height:2.5, func:function(){flashlightOn();}},
-{id:"facebook", top:-2.5, left:1, width:2, height:2, func:function(){openFeed('Facebook');}},
-{id:"twitter", top:-2.5, left:3, width:2, height:2, func:function(){openFeed('twitter');}},
-{id:"instagram", top:-2.5, left:5, width:2, height:2, func:function(){openFeed('Instagram');}},
-{id:"youtube", top:-2.5, left:7, width:2, height:2, func:function(){openFeed('YouTube');}},
+{id:"greenlight", top:-3.5, left:1, width:1.5, height:2.5, func:function(){openGreen();}},
+{id:"bell", top:-3.5, left:2.5, width:2.5, height:2.5, func:function(){getRingtone();}},
+{id:"donate", top:-3.5, left:5, width:2.5, height:2.5, func:function(){openUrl('https://portal.icheckgateway.com/SaveXXII/');}},
+{id:"flashlight", top:-3.5, left:7.5, width:1.5, height:2.5, func:function(){flashlightOn();}},
+{id:"facebook", top:-5.5, left:1, width:2, height:2, func:function(){openFeed('Facebook');}},
+{id:"twitter", top:-5.5, left:3, width:2, height:2, func:function(){openFeed('twitter');}},
+{id:"instagram", top:-5.5, left:5, width:2, height:2, func:function(){openFeed('Instagram');}},
+{id:"youtube", top:-5.5, left:7, width:2, height:2, func:function(){openFeed('YouTube');}},
 {id:"steeltext", top:-.5, left:.5, width:9, height:1, func:function(){}},
 {id:"greentext", top:"m", left:.5, width:9, height:11, func:function(){closeGreen();}},
 {id:"greenback", top:-2.5, left:.5, width:2, height:2, func:function(){closeGreen();}},
@@ -266,6 +266,8 @@ function openFeed(network){
     if(rssUrl != ""){
       document.getElementById('feeds').style.display="block";
       atNetwork=network;
+      document.getElementById('feeds').innerHTML="";
+      document.getElementById('feeds').style.display="none";
 
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -304,14 +306,16 @@ function parseFeed(xml){
       htmlBlock+=  '<img src="'+downloadItem['media:content']['@attributes'].url+'" width='+grid*8 +' />';
       htmlBlock+=  '</a>';
     }
-    //htmlBlock+=  '<div style="border:1px solid black; width:'+grid*6+'px; background-color:blue;">'
-    //htmlBlock+=  '<a href="javascript:remoteLink(\''+downloadItem.link+'\');">'+downloadItem.title+'</a>';
-    //htmlBlock+=  '<br />'+downloadItem.dateStr+' ';
-    //htmlBlock+='</div>';
+    htmlBlock+=  '<div style="border:1px solid black; width:'+grid*8+'px; background-color:red;">'
+    htmlBlock+=  '<a href="javascript:remoteLink(\''+downloadItem['link']['TEXT']+'\');">'+downloadItem['title']["#text"]+'</a>';
+    htmlBlock+=  '<br />'+downloadItem.dateStr+' ';
+    htmlBlock+='</div>';
     htmlBlock+='</div>';
     }
   document.getElementById('feeds').innerHTML=htmlBlock;
+  document.getElementById('feeds').style.display="block";
   document.getElementById('feeds').style.webkitOverflowScrolling="touch";
+
   //document.getElementById('instHolder').style.width=grid*48+'px';
   //document.getElementById('instHolder').style.height="100%";
   console.log('feed completed')
@@ -502,9 +506,11 @@ function mouseUp(event){
   handleSteelEvent({type:"touchend",touches:[]});
   mouseDragging=false;
 }
+/*
 function scrollStop(){
-  console.log(body.scrollTop);
+  console.log(document.body.scrollTop);
 }
+*/
 function imageLoaded(){
   //console.log('imageLoaded')
   geometry();
@@ -529,7 +535,7 @@ var triadImage=null;
   <div id="wrapper" >
     <div id="helpup" class="button"></div>
     <div id="shflogo" class="button"></div>
-    <div id="feeds" onscroll="scrollStop()" style="display:none; overflow-y: scroll; -webkit-overflow-scrolling: touch; overflow:scroll;"></div>
+    <div id="feeds" style="display:none; overflow-y: scroll; -webkit-overflow-scrolling: touch; overflow:scroll;"></div>
     <div id="greenlight" class="button"></div><div id="bell" class="button"></div>
     <div id="flashlight" class="button"></div><div id="donate" class="button"></div>
     <div id="facebook" class="button"></div><div id="twitter" class="button"></div>
