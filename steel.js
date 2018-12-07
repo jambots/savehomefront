@@ -155,8 +155,8 @@ function handleSteelEvent(e){
       } //end while
       if(loadList.length==0){
         bufferKey(keySelection);
-        keySelection=-1;
       }
+      keySelection=-1;
       drawKeys();
     }// end of mode key
   }// end of touch end
