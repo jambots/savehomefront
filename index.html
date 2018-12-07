@@ -81,6 +81,7 @@ function portraitGeometry(){
     style.innerHTML +='#greenback{display:none;}';
     style.innerHTML +='#wrapper{display:block;}';
   }
+  style.innerHTML +='a{text-decoration:none; color:#333;}';
   style.innerHTML +='#steelCanvas{display:none;}';
   style.innerHTML +='#steelControls{display:none;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
@@ -162,6 +163,7 @@ function landscapeGeometry(){
 
 var canv;
 function openUrl(url){
+  console.log(url);
 cordova.InAppBrowser.open(url, "_system")
 }
 function flashlightOn(){
@@ -293,22 +295,21 @@ function parseFeed(xml){
   var htmlBlock="";
   for(var d=0; d<feedObj.item.length; d++){
 
-    var textStyle='padding-top:'+grid*.2+'px; width:'+ grid*8 +'px';
-    textStyle+=' line-height:'+ grid*2.5 +'px; background-color:yellow;'
-    textStyle+=' margin:'+ grid*.25 +'px; padding:'+ grid*.25 +'px; border:1px solid #666;'
+    var textStyle=' width:'+ grid*8 +'px; font-family:Arial;';
+    textStyle+=' line-height:'+ grid/2 +'px; background-color:#d8d8d8;'
+    textStyle+=' margin:'+ grid*.25 +'px; padding:'+ grid*.25 +'px; border:1px solid blue;'
     //var gradStyle="background-image: -webkit-gradient(linear,left top,left bottom, color-stop(0%, #F2F2F2), color-stop(2%, #F2F2F2), color-stop(3%, #EDEDED), color-stop(50%, #fff), color-stop(100%, #fff));";
     var gradStyle="";
     var downloadItem=feedObj.item[d];
     console.log(downloadItem);
     htmlBlock+='<div style="'+textStyle+' '+gradStyle+' float:left;">';
     if(downloadItem.hasOwnProperty('media:content')){
-      htmlBlock+=  '<a href="javascript:remoteLink(\''+downloadItem.link+'\');">';
+      htmlBlock+=  '<a href="javascript:openUrl(\''+downloadItem.link['#text']+'\');">';
       htmlBlock+=  '<img src="'+downloadItem['media:content']['@attributes'].url+'" width='+grid*8 +' />';
       htmlBlock+=  '</a>';
     }
-    htmlBlock+=  '<div style="border:1px solid black; width:'+grid*8+'px; background-color:red;">'
-    htmlBlock+=  '<a href="javascript:remoteLink(\''+downloadItem['link']['TEXT']+'\');">'+downloadItem['title']["#text"]+'</a>';
-    htmlBlock+=  '<br />'+downloadItem.dateStr+' ';
+    htmlBlock+=  '<div style="width:'+grid*8+'px; background-color:#e8e8e8;">'
+    htmlBlock+=  '<a href="javascript:openUrl(\''+downloadItem['link']['#text']+'\');">'+downloadItem['title']["#text"]+'</a>';
     htmlBlock+='</div>';
     htmlBlock+='</div>';
     }
