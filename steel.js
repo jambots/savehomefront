@@ -152,36 +152,33 @@ function handleSteelEvent(e){
         trash.source.stop();
         trash.source=null;
         trash=null;
-      }
-      if(loadList.length=0){
-
+      } //end while
+      if(loadList.length==0){
         bufferKey(keySelection);
         keySelection=-1;
-        drawKeys();
       }
-      else{
-        console.log('did not buffer');
-      }
+      drawKeys();
+    }// end of mode key
+  }// end of touch end
+  if(mode=="key"){
+    if(e.type=="touchmove"){
+      var fieldY=e.touches[0].pageY-topPad;
+      var yGrid=grid*9/12;
+      var y=Math.floor(fieldY/yGrid);
+      if(y<0){y=0;}
+      if(y>11){y=11;}
+      keySelection=y;
     }
-    if(mode=="key"){
-      if(e.type=="touchmove"){
-        var fieldY=e.touches[0].pageY-topPad;
-        var yGrid=grid*9/12;
-        var y=Math.floor(fieldY/yGrid);
-        if(y<0){y=0;}
-        if(y>11){y=11;}
-        keySelection=y;
-      }
+  }
+  //console.log("mode=" +mode+ " type="+e.type+"");
+  if(mode=="play"){
+    // not sure this would happen
+    if((e.type=="touchstart")&&(e.touches.length==1)&&(lastSustainChannel>-1)){
+      comQueue.push({channel:lastSustainChannel, mode:"stop"});
+      //comQueue.push("action=manageSound|channel="+lastSustainChannel+"|mode=stop|loop=false");
     }
-    //console.log("mode=" +mode+ " type="+e.type+"");
-    if(mode=="play"){
-      // not sure this would happen
-      if((e.type=="touchstart")&&(e.touches.length==1)&&(lastSustainChannel>-1)){
-        comQueue.push({channel:lastSustainChannel, mode:"stop"});
-        //comQueue.push("action=manageSound|channel="+lastSustainChannel+"|mode=stop|loop=false");
-      }
-      var startedTouchIds=new Array();
-      var endedTouchIds=new Array();
+    var startedTouchIds=new Array();
+    var endedTouchIds=new Array();
     var prevTouchIdStack=touchIdStack;
     var prevTouchIdGlom=touchIdStack.join('|');
     //dbuga("<br>e.touches.length:"+e.touches.length);
