@@ -2,7 +2,7 @@ var setupList=new Array("0-a", "0-d", "1-a", "1-d", "1-dc", "1-u", "10-a", "10-d
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext = new AudioContext();
-var delay, feedbackGain, delayGain, masterGain; 
+var delay, feedbackGain, delayGain, masterGain;
 var banks={"helms":{}, "triad":{}};
 var buffersByUrl={};
 var samples={};
@@ -82,11 +82,11 @@ var sources=[];
 function comTick(){
   for (var c=0; c<comQueue.length; c++){
     //console.log(comQueue[c]);
-    
+
     if(comQueue[c].mode=="play"){
       var sound={source:sourceBuffer(buffersByUrl[comQueue[c].sound]), channel:comQueue[c].channel};
       sources.push(sound);
-      sound.source.start(0);    
+      sound.source.start(0);
     }
     if((comQueue[c].mode=="slidepause2")||(comQueue[c].mode=="slidepause")||(comQueue[c].mode=="pause")||(comQueue[c].mode=="stop")){
       spliceList=[];
@@ -153,35 +153,39 @@ function handleSteelEvent(e){
         trash.source=null;
         trash=null;
       }
+      if(loadList.length=0){
 
-    bufferKey(keySelection);
-    keySelection=-1;
-    drawKeys();
+        bufferKey(keySelection);
+        keySelection=-1;
+        drawKeys();
+      }
+      else{
+        console.log('did not buffer');
+      }
     }
-  }
-  if(mode=="key"){
-    if(e.type=="touchmove"){
-      var fieldY=e.touches[0].pageY-topPad;
-      var yGrid=grid*9/12;
-      var y=Math.floor(fieldY/yGrid);
-      if(y<0){y=0;}
-      if(y>11){y=11;}
-      keySelection=y;
+    if(mode=="key"){
+      if(e.type=="touchmove"){
+        var fieldY=e.touches[0].pageY-topPad;
+        var yGrid=grid*9/12;
+        var y=Math.floor(fieldY/yGrid);
+        if(y<0){y=0;}
+        if(y>11){y=11;}
+        keySelection=y;
+      }
     }
-  }
-  //console.log("mode=" +mode+ " type="+e.type+"");
-  if(mode=="play"){
-    // not sure this would happen
-    if((e.type=="touchstart")&&(e.touches.length==1)&&(lastSustainChannel>-1)){
-      comQueue.push({channel:lastSustainChannel, mode:"stop"});
-      //comQueue.push("action=manageSound|channel="+lastSustainChannel+"|mode=stop|loop=false");
-    }
-    var startedTouchIds=new Array();
-    var endedTouchIds=new Array();
+    //console.log("mode=" +mode+ " type="+e.type+"");
+    if(mode=="play"){
+      // not sure this would happen
+      if((e.type=="touchstart")&&(e.touches.length==1)&&(lastSustainChannel>-1)){
+        comQueue.push({channel:lastSustainChannel, mode:"stop"});
+        //comQueue.push("action=manageSound|channel="+lastSustainChannel+"|mode=stop|loop=false");
+      }
+      var startedTouchIds=new Array();
+      var endedTouchIds=new Array();
     var prevTouchIdStack=touchIdStack;
     var prevTouchIdGlom=touchIdStack.join('|');
     //dbuga("<br>e.touches.length:"+e.touches.length);
- 
+
     var newTouchIdArray=new Array();
     for(tNum=0; tNum<e.touches.length; tNum++){
       var t=e.touches[tNum];
@@ -194,7 +198,7 @@ function handleSteelEvent(e){
       else{
         //console.log("! "+t.pageX+" "+t.identifier);
         touchesById[t.identifier].pageX=t.pageX;// this was auto for touches
-        touchesById[t.identifier].pageY=t.pageY;// this was auto for touches, 
+        touchesById[t.identifier].pageY=t.pageY;// this was auto for touches,
         //test that shim doesn't break
       }
     }
@@ -254,10 +258,10 @@ function handleSteelEvent(e){
       touchesById[thisId].y=thisY;
       //comQueue.push("action=manageSound|channel="+attackChannel+"|mode=play|starttime=0|loop=false");
       //dbug2("<br><b>action=manageSound|channel="+attackChannel+"|mode=play|starttime=0|loop=false</b>");
-      // to set sustainer intervals 
+      // to set sustainer intervals
       //if(thisY==0){sustainSound="hi_"+thisX+"_s";}
-      //else{sustainSound="lo_"+thisX+"_s";}  
-      
+      //else{sustainSound="lo_"+thisX+"_s";}
+
       if(thisY==0){
         attackSound="banks/helms_"+keyName+"/"+thisX+"-a.mp3";
         sustainSound="banks/helms_"+keyName+"/"+thisX+"-s.mp3";
@@ -265,7 +269,7 @@ function handleSteelEvent(e){
       else{
         attackSound="banks/triad_"+keyName+"/"+thisX+"-a.mp3";
         sustainSound="banks/triad_"+keyName+"/"+thisX+"-s.mp3";
-      }  
+      }
 
       comQueue.push({channel:attackChannel, mode:"play", sound:attackSound});
 
@@ -300,7 +304,7 @@ function handleSteelEvent(e){
             touchesById[thisId].sliding=false;
             useChannel=channelMap[thisY][touchesById[thisId].slideSample];
             comQueue.push({channel:useChannel, mode:"slidepause2"});
-        
+
       }
       comTick();
       clearInterval(touchesById[thisId].sustainInterval);
@@ -328,7 +332,7 @@ function handleSteelEvent(e){
       if(xMove != 0){
         // x moved
         //dbug2("<br>xMove: "+xMove);
-      
+
         // test for move into chroma skip
         if((thisX==2)||(thisX==5)||(thisX==8)){thisChromatic=true;}
         else{thisChromatic=false;}
@@ -337,9 +341,9 @@ function handleSteelEvent(e){
           //dbug2('move into chromatic, skip');
         }
         else{
-          // execute x move - silence, new attack, restart sus, update 
+          // execute x move - silence, new attack, restart sus, update
           touchesById[thisId].x=thisX;
-  
+
           // increment slideCount for this touch
           touchesById[thisId].slideCount+=xMove;
           // silence
@@ -404,7 +408,7 @@ function handleSteelEvent(e){
             slideChannel=channelMap[thisY][useSound];
             //comQueue.push("action=manageSound|channel="+slideChannel+"|mode=play|loop=false");
             comQueue.push({channel:slideChannel, bank:instrument, key:keyName, mode:"play", sound:"banks/"+instrument+"_"+keyName+"/"+useSound+".mp3"});
-          }  
+          }
           else{
             //comQueue.push("action=manageSound|channel="+thisSustainChannel+"|file=banks/"+instrument+"_"+keyName+"/"+useSound+".mp3|mode=play|loop=false");
             comQueue.push({channel:thisSustainChannel, bank:instrument, key:keyName, mode:"play", sound:"banks/"+instrument+"_"+keyName+"/"+useSound+".mp3"});
@@ -412,7 +416,7 @@ function handleSteelEvent(e){
           // restart sus
           clearInterval(thisTouch.sustainInterval);
           //dbug2('<br>restart sus');
-          // to set sustainer intervals 
+          // to set sustainer intervals
           touchesById[thisId].sustainSound="banks/"+instrument+"_"+keyName+"/"+thisX+"-s.mp3";
           touchesById[thisId].sustainInterval=setInterval("sustainTick("+thisId+");", 700+rnd(100));
         } // end of move into chroma skip
@@ -420,7 +424,7 @@ function handleSteelEvent(e){
       if((yMove != 0)&&(xMove == 0)){
         // y move, not x move, chromatic doesn't matter, - modify sus note
         if(thisY==0){sustainSound="banks/helms_"+keyName+"/"+thisX+"-s.mp3";}
-        else{sustainSound="banks/triad_"+keyName+"/"+thisX+"-s.mp3";}  
+        else{sustainSound="banks/triad_"+keyName+"/"+thisX+"-s.mp3";}
         touchesById[thisId].sustainSound=sustainSound;
       }
     }//end of each in touchIdStack
@@ -432,9 +436,9 @@ function handleSteelEvent(e){
     }
   }//end of mode==play
   ////console.log(touchesById);
-}  
+}
 function bufferSamples(){
-  startTime=new Date().getTime();  
+  startTime=new Date().getTime();
   loadList=[];
   for(var k=0; k<keyArray.length; k++){
     loadList.push({bank:"triad", key:keyArray[k], sample:"0-s"})
@@ -558,7 +562,7 @@ function drawKeys(){
   steelCtx.textBaseline="middle";
   var g=grid*9/12;
   steelCtx.lineWidth=g/5;
- 
+
   steelCtx.font=g/1.5+"px Arial ";
   steelCanv.style.letterSpacing=(0-g/5)+"px";
   for (var k=0; k<keyArray.length; k++){
@@ -578,7 +582,7 @@ function drawKeys(){
       steelCtx.strokeText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
     }
     steelCtx.fillStyle="black";
-   
+
     steelCtx.fillText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
   }
 }

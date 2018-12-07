@@ -81,7 +81,7 @@ function portraitGeometry(){
     style.innerHTML +='#greenback{display:none;}';
     style.innerHTML +='#wrapper{display:block;}';
   }
-  style.innerHTML +='a{text-decoration:none; color:#333;}';
+  style.innerHTML +='a{text-decoration:none; color:#777;}';
   style.innerHTML +='#steelCanvas{display:none;}';
   style.innerHTML +='#steelControls{display:none;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
@@ -105,7 +105,11 @@ function portraitGeometry(){
     style.innerHTML +='#'+button.id+'{left:'+(leftPad+button.left*grid)+'px; top:'+top+'px;}';
     style.innerHTML +='#'+button.id+'{width:'+(button.width*grid)+'px; height:'+(button.height*grid)+'px;}';
   }
-  style.innerHTML +='#feeds{width:'+(9*grid)+'px; height:'+(wh-6*grid)+'px; top:'+(.5*grid)+'px; left:'+(.5*grid)+'px; background-color:white; position:absolute;}';
+  style.innerHTML +='#feeds{width:'+(9*grid)+'px; height:'+(wh-6.5*grid)+'px; top:'+(.5*grid)+'px; left:'+(ww-grid*9)/2+'px;  background-color:white; position:absolute;}';
+  style.innerHTML +='.feedItem{width:'+ grid*8 +'px; float:left; margin:'+ grid*.25 +'px; padding:'+ grid*.25 +'px; background-color:#f8f8f8;}';
+  style.innerHTML +='.feedItem{border:1px solid #aaaaaa; border-radius:'+grid*.35+'px; font:'+grid*.55+'px Arial; line-height:'+ grid*.65 +'px;  }';
+  style.innerHTML +='.feedLink{font-size:'+grid*.45+'px; font-family:Arial Black; color:#777; float:right;}';
+
   document.getElementsByTagName('head')[0].appendChild(style);
 
 }
@@ -250,10 +254,10 @@ var buttons=[
 {id:"bell", top:-3.5, left:2.5, width:2.5, height:2.5, func:function(){getRingtone();}},
 {id:"donate", top:-3.5, left:5, width:2.5, height:2.5, func:function(){openUrl('https://portal.icheckgateway.com/SaveXXII/');}},
 {id:"flashlight", top:-3.5, left:7.5, width:1.5, height:2.5, func:function(){flashlightOn();}},
-{id:"facebook", top:-5.5, left:1, width:2, height:2, func:function(){openFeed('Facebook');}},
+{id:"Facebook", top:-5.5, left:1, width:2, height:2, func:function(){openFeed('Facebook');}},
 {id:"twitter", top:-5.5, left:3, width:2, height:2, func:function(){openFeed('twitter');}},
-{id:"instagram", top:-5.5, left:5, width:2, height:2, func:function(){openFeed('Instagram');}},
-{id:"youtube", top:-5.5, left:7, width:2, height:2, func:function(){openFeed('YouTube');}},
+{id:"Instagram", top:-5.5, left:5, width:2, height:2, func:function(){openFeed('Instagram');}},
+{id:"YouTube", top:-5.5, left:7, width:2, height:2, func:function(){openFeed('YouTube');}},
 {id:"steeltext", top:-.5, left:.5, width:9, height:1, func:function(){}},
 {id:"greentext", top:"m", left:.5, width:9, height:11, func:function(){closeGreen();}},
 {id:"greenback", top:-2.5, left:.5, width:2, height:2, func:function(){closeGreen();}},
@@ -285,7 +289,21 @@ function openFeed(network){
       xhttp.send();
     } else{alert(network+' not available');}
   }
+  highlightNetworks();
+
 }
+function highlightNetworks(){
+  for (var r=0; r<required.length; r++){
+    if(atNetwork==required[r]){
+      document.getElementById(required[r]).style.backgroundColor="white";
+    }
+    else{
+      document.getElementById(required[r]).style.backgroundColor="rgba(0,0,0,0)";
+    }
+    document.getElementById(required[r]).style.borderRadius=grid/4+"px";
+  }
+}
+
 var xmlResponse;
 var feedObj;
 function parseFeed(xml){
@@ -295,22 +313,22 @@ function parseFeed(xml){
   var htmlBlock="";
   for(var d=0; d<feedObj.item.length; d++){
 
-    var textStyle=' width:'+ grid*8 +'px; font-family:Arial;';
-    textStyle+=' line-height:'+ grid/2 +'px; background-color:#d8d8d8;'
-    textStyle+=' margin:'+ grid*.25 +'px; padding:'+ grid*.25 +'px; border:1px solid blue;'
-    //var gradStyle="background-image: -webkit-gradient(linear,left top,left bottom, color-stop(0%, #F2F2F2), color-stop(2%, #F2F2F2), color-stop(3%, #EDEDED), color-stop(50%, #fff), color-stop(100%, #fff));";
-    var gradStyle="";
     var downloadItem=feedObj.item[d];
+    var link=downloadItem['link']['#text'];
+    var titleText=urlify(downloadItem['title']["#text"]);
+
     console.log(downloadItem);
-    htmlBlock+='<div style="'+textStyle+' '+gradStyle+' float:left;">';
+    htmlBlock+='<div class="feedItem">';
     if(downloadItem.hasOwnProperty('media:content')){
-      htmlBlock+=  '<a href="javascript:openUrl(\''+downloadItem.link['#text']+'\');">';
-      htmlBlock+=  '<img src="'+downloadItem['media:content']['@attributes'].url+'" width='+grid*8 +' />';
-      htmlBlock+=  '</a>';
+      //htmlBlock+='<a href="javascript:openUrl(\''+downloadItem['link']['#text']+'\');">';
+      htmlBlock+='  <img src="'+downloadItem['media:content']['@attributes'].url+'" width='+grid*8 +' />';
+      //htmlBlock+='</a>';
     }
-    htmlBlock+=  '<div style="width:'+grid*8+'px; background-color:#e8e8e8;">'
-    htmlBlock+=  '<a href="javascript:openUrl(\''+downloadItem['link']['#text']+'\');">'+downloadItem['title']["#text"]+'</a>';
-    htmlBlock+='</div>';
+    htmlBlock+='<div style="width:'+grid*8+'px;">'
+    htmlBlock+=  titleText;
+    htmlBlock+=' &nbsp; <a href="javascript:openUrl(\''+link+'\');" class="feedLink">';
+    htmlBlock+='<br /><strong>VIEW &raquo;</strong></a>';
+    htmlBlock+='  </div>';
     htmlBlock+='</div>';
     }
   document.getElementById('feeds').innerHTML=htmlBlock;
@@ -320,6 +338,14 @@ function parseFeed(xml){
   //document.getElementById('instHolder').style.width=grid*48+'px';
   //document.getElementById('instHolder').style.height="100%";
   console.log('feed completed')
+}
+function urlify(text) {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, function(url) {
+        return '<a href="' + url + '">' + url + '</a>';
+    })
+    // or alternatively
+    // return text.replace(urlRegex, '<a href="$1">$1</a>')
 }
 function xmlToJson(xml) {
 
@@ -539,8 +565,8 @@ var triadImage=null;
     <div id="feeds" style="display:none; overflow-y: scroll; -webkit-overflow-scrolling: touch; overflow:scroll;"></div>
     <div id="greenlight" class="button"></div><div id="bell" class="button"></div>
     <div id="flashlight" class="button"></div><div id="donate" class="button"></div>
-    <div id="facebook" class="button"></div><div id="twitter" class="button"></div>
-    <div id="instagram" class="button"></div><div id="youtube" class="button"></div>
+    <div id="Facebook" class="button"></div><div id="twitter" class="button"></div>
+    <div id="Instagram" class="button"></div><div id="YouTube" class="button"></div>
     <div id="steeltext" class="button">Rotate to Play</div>
   </div>
   <div id="greendiv">
