@@ -92,6 +92,7 @@ function comTick(){
       spliceList=[];
       for(var s=0; s<sources.length; s++){
         if(sources[s].channel==comQueue[c].channel){
+          console.log(sources[s]);
           sources[s].source.stop();
           sources[s].source.disconnect();
           spliceList.unshift(s);
