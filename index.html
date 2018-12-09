@@ -403,9 +403,8 @@ function openGreen(){
 
 function init(){
   //console.log('init()');
-  getFeeds();
-  new ScrollFix(document.getElementById('feeds'));
   document.addEventListener("deviceready", resumeInit, false);
+  getFeeds();
 }
 var controls;
 var feeds=[];
@@ -462,6 +461,7 @@ function createFeed(network){
 
 function resumeInit(){
   //console.log('resumeInit()');
+  new ScrollFix(document.getElementById('feeds'));
   canv=document.getElementById('steelCanvas');
   controls=document.getElementById('steelControls');
   controls.addEventListener('touchstart', touchStart, false);
