@@ -92,10 +92,12 @@ function comTick(){
       spliceList=[];
       for(var s=0; s<sources.length; s++){
         if(sources[s].channel==comQueue[c].channel){
-          console.log(sources[s]);
-          sources[s].source.stop();
-          sources[s].source.disconnect();
-          spliceList.unshift(s);
+          console.log(sources[s].source.playbackState);
+          if(sources[s].source.playbackState>0){
+            sources[s].source.stop();
+            sources[s].source.disconnect();
+          }
+        spliceList.unshift(s);
         }
       }
       for (var l=0; l<spliceList.length; l++){
@@ -108,6 +110,7 @@ function comTick(){
   comQueue=[];
   //console.log(sources);
 }
+
 var keySources=[];
 var keySelection=-1;
 var keyInterval;
