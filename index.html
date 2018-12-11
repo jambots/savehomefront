@@ -145,6 +145,10 @@ function landscapeGeometry(){
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
   style.innerHTML +='#loadingDiv{height:'+grid*4+'px; width:'+grid*4+'px;}';
   style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
+  style.innerHTML +='#slideDiv{position:absolute; margin:0; background-image:url(imageslarge/slide.png);}';
+  style.innerHTML +='#slideDiv{background-size:100% 100%;}';
+  style.innerHTML +='#slideDiv{width:'+grid*1+'px; height:'+grid*4+'px}';
+
   document.getElementsByTagName('head')[0].appendChild(style);
 
   var steelCanv=document.getElementById('steelCanvas');
@@ -161,6 +165,7 @@ function landscapeGeometry(){
     steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
   }
   drawKeys();
+
 }
 
 
@@ -186,6 +191,8 @@ function flashlightOn(){
 
 function handleEvent(e){
   //console.log(e.target.id);
+  if(audioInited==false){initAudio();}
+
   e.stopPropagation();
   e.preventDefault();
   for (var b=0; b<buttons.length; b++){
@@ -225,7 +232,8 @@ function setupButtons(){
       handleEvent(evt)
     });
     el.addEventListener("touchstart", function(evt){
-      handleEvent(evt)
+      if(audioInited==false){initAudio();}
+      handleEvent(evt);
 
     });
 
@@ -478,7 +486,7 @@ function resumeInit(){
   setupButtons();
   window.setInterval("geometryTick()",1000);
   geometryTick();
-  initAudio();
+  ////initAudio();
   helmsImage = new Image();
   helmsImage.addEventListener("load", imageLoaded, false);
   helmsImage.src = "imageslarge/bg_helms.png";
@@ -583,7 +591,8 @@ var triadImage=null;
   </div>
 
   <canvas id="steelCanvas"></canvas>
+  <div id="slideDiv" style="display:none;"></div>
   <div id="steelControls"></div>
-  <div id="loadingDiv"></div>
+  <div id="loadingDiv" style="display:none;"></div>
 </body>
 </html>

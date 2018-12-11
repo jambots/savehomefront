@@ -1,7 +1,7 @@
 var setupList=new Array("0-a", "0-d", "1-a", "1-d", "1-dc", "1-u", "10-a", "10-d", "10-u", "11-a", "11-u", "2-a", "3-a", "3-d", "3-u", "3-uc", "4-a", "4-d", "4-dc", "4-u", "5-a", "6-a", "6-d", "6-u", "6-uc", "7-a", "7-d", "7-dc", "7-u", "8-a", "9-a", "9-d", "9-u", "9-uc", "slide-down-hi", "slide-down-lo", "slide-up-hi", "slide-up-lo");
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-var audioContext = new AudioContext();
+var audioContext;
 var delay, feedbackGain, delayGain, masterGain;
 var banks={"helms":{}, "triad":{}};
 var buffersByUrl={};
@@ -30,6 +30,9 @@ function setupChannelMap(){
   }
 
 function initAudio(){
+
+    audioContext = new AudioContext();
+    audioInited=true;
     delayInputGain = audioContext.createGain();// Gain 3
     delayInputGain.gain.value = 0.2;
     feedbackGain = audioContext.createGain();// Gain 5
@@ -48,6 +51,7 @@ function initAudio(){
 
   setupChannelMap();
   bufferSamples();
+  window.requestAnimationFrame(slideTick);
 }
 function sustainKill(theChannel){
   lastSustainChannel=-1;
@@ -110,7 +114,27 @@ function comTick(){
   comQueue=[];
   //console.log(sources);
 }
+function slideTick(){
+  if(ww>wh){
+    if(Object.keys(touchesById).length>0){
+      thisTouch=touchesById[0];
+      thisVoice=thisTouch.voice;
+      thisX=Math.floor((thisTouch.pageX-leftPad)/cellSize);
+      thisY=Math.floor((thisTouch.pageY-topPad)/(grid*9/2));
+      //console.log(thisX+" "+thisY);
+      if(thisX<0){thisX=0;}
+      if(thisX>11){thisX=11;}
+      if(thisY<0){thisY=0;}
+      if(thisY>1){thisY=1;}
+      document.getElementById('slideDiv').style.display="block";
 
+    }else{
+      document.getElementById('slideDiv').style.display="none";
+    }
+  }
+  window.requestAnimationFrame(slideTick);
+
+}
 var keySources=[];
 var keySelection=-1;
 var keyInterval;
@@ -130,7 +154,10 @@ function keyTick(){
   sound.start(0);
   drawKeys();
 }
+var audioInited=false;
 function handleSteelEvent(e){
+  if(audioInited==false){initAudio();}
+
   //console.log(e.type);
   if((e.type=="touchstart")&&(e.touches.length==1)){
     if(e.touches[0].pageX>leftPad+grid*15){
@@ -439,6 +466,8 @@ function handleSteelEvent(e){
   ////console.log(touchesById);
 }
 function bufferSamples(){
+  document.getElementById('loadingDiv').style.display="block";
+
   startTime=new Date().getTime();
   loadList=[];
   for(var k=0; k<keyArray.length; k++){
