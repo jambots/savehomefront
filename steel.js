@@ -149,7 +149,7 @@ function slideTick(){
     var useY=slidePrevY+dy*prog;
     document.getElementById('slideDiv').style.width=grid*1+"px";
     document.getElementById('slideDiv').style.height=grid*3.5+"px";
-    document.getElementById('slideDiv').style.top=grid*(4.5*useY+1)+"px";
+    document.getElementById('slideDiv').style.top=grid*(4.5*useY+.5)+"px";
     document.getElementById('slideDiv').style.left=cellSize*(useX)+"px";
 
   }
