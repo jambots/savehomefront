@@ -114,26 +114,46 @@ function comTick(){
   comQueue=[];
   //console.log(sources);
 }
+var slideQueue=[];
+var slideX=0;
+var slideY=0;
+var slidePrevX=0;
+var slidePrevY=0;
+var slideSpeed=.02;
+var slideProg=1;
 function slideTick(){
   if(ww>wh){
-    if(Object.keys(touchesById).length>0){
-      thisTouch=touchesById[0];
-      thisVoice=thisTouch.voice;
-      thisX=Math.floor((thisTouch.pageX-leftPad)/cellSize);
-      thisY=Math.floor((thisTouch.pageY-topPad)/(grid*9/2));
-      //console.log(thisX+" "+thisY);
-      if(thisX<0){thisX=0;}
-      if(thisX>11){thisX=11;}
-      if(thisY<0){thisY=0;}
-      if(thisY>1){thisY=1;}
-      document.getElementById('slideDiv').style.display="block";
+    if(slideQueue.length>0){
+      var move=slideQueue[0];
+      slideSpeed=move.speed;
+      slideProg=0;
+      slidePrevX=slideX;
+      slidePrevY=slideY;
+      slideX=move.x;
+      slideY=move.y;
+      if(move.type=="start"){
+        document.getElementById('slideDiv').style.display="block";
+      }
+      if(move.type=="end"){
+        document.getElementById('slideDiv').style.display="none";
+      }
+      slideQueue=[];
+    }// end of new command
+    slideProg+=slideSpeed;
+    if(slideProg>1){slideProg=1;}
+    var prog=slideProg;//(Math.cos(Math.PI*(1-slideProg)) + 1) / 2;
+    if((prog<1)&&(prog>0)){console.log(prog);}
+    var dx=slideX-slidePrevX;
+    var dy=slideY-slidePrevY;
+    var useX=slidePrevX+dx*prog;
+    var useY=slidePrevY+dy*prog;
+    document.getElementById('slideDiv').style.width=grid*1+"px";
+    document.getElementById('slideDiv').style.height=grid*3.5+"px";
+    document.getElementById('slideDiv').style.top=grid*(4.5*useY+1)+"px";
+    document.getElementById('slideDiv').style.left=cellSize*(useX)+"px";
 
-    }else{
-      document.getElementById('slideDiv').style.display="none";
-    }
   }
   window.requestAnimationFrame(slideTick);
-
 }
 var keySources=[];
 var keySelection=-1;
@@ -284,6 +304,9 @@ function handleSteelEvent(e){
       touchesById[thisId].attackChannel=attackChannel;
       touchesById[thisId].x=thisX;
       touchesById[thisId].y=thisY;
+      if(n==0){
+        slideQueue.unshift({type:"start", speed:1, x:thisX, y:thisY});
+      }
       //comQueue.push("action=manageSound|channel="+attackChannel+"|mode=play|starttime=0|loop=false");
       //dbug2("<br><b>action=manageSound|channel="+attackChannel+"|mode=play|starttime=0|loop=false</b>");
       // to set sustainer intervals
@@ -307,6 +330,9 @@ function handleSteelEvent(e){
     }
     // silence ended touch attacks and or sustains
     for (n=0; n<endedTouchIds.length; n++){
+      if(n==0){
+        slideQueue.unshift({type:"end", speed:1, x:0, y:0});
+      }
       thisId=endedTouchIds[n];
       thisTouch=touchesById[thisId];
       var attackChannel=thisTouch.attackChannel;
@@ -399,6 +425,10 @@ function handleSteelEvent(e){
             touchesById[thisId].chromatic=false;
             useSound+="c";
           }
+          if(n==0){
+            slideQueue.unshift({type:"move", speed:.1, x:thisX, y:thisY});
+          }
+
           // override useSound with slide if moved pas 3 quickly and not already sliding
           if(Math.abs(touchesById[thisId].slideCount)>3){
 
@@ -413,6 +443,10 @@ function handleSteelEvent(e){
               useSound="slide-"+dir+"-"+loc;
               touchesById[thisId].sliding=true;
               touchesById[thisId].slideSample=useSound;
+              if(n==0){
+                slideQueue.unshift({type:"move", speed:.01, x:thisX, y:thisY});
+              }
+
             }
           }
           if((touchesById[thisId].sliding==true)&&(Math.abs(touchesById[thisId].slideCount)<2)){
