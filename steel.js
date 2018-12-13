@@ -148,8 +148,8 @@ function slideTick(){
     var useX=slidePrevX+dx*prog;
     var useY=slidePrevY+dy*prog;
     document.getElementById('slideDiv').style.width=grid*1+"px";
-    document.getElementById('slideDiv').style.height=grid*3.5+"px";
-    document.getElementById('slideDiv').style.top=grid*(4.5*useY+.5)+"px";
+    document.getElementById('slideDiv').style.height=grid*2.5+"px";
+    document.getElementById('slideDiv').style.top=grid*(4.5*useY+1)+"px";
     document.getElementById('slideDiv').style.left=cellSize*(useX)+"px";
 
   }
@@ -162,10 +162,24 @@ var mode="play";
 var loadList=[];
 var startTime=0;
 var keyArray=["C", "F", "Bb", "Eb", "Ab", "Db", "Gb", "B", "E", "A", "D", "G"];
+var keySequence=["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 var keyName="A";
 var keyNum=9;
 var keySources=[];
-
+var intervalSequence=[
+  {interval:0, form:""},
+  {interval:5, form:""},
+  {interval:2, form:""},
+  {interval:7, form:""},
+  {interval:5, form:""},
+  {interval:10, form:""},
+  {interval:7, form:""},
+  {interval:0, form:""},
+  {interval:2, form:""},
+  {interval:9, form:"m"},
+  {interval:0, form:""},
+  {interval:4, form:"m7"},
+];
 function keyTick(){
   var keyUrl="banks/triad_"+keyArray[keySelection]+"/0-s.mp3";
   //console.log(keyUrl);
@@ -617,18 +631,26 @@ var cellSize=1;
 var grid=1;
 var topPad=0;
 var leftPad=0;
+
+
 function drawKeys(){
   var steelCanv=document.getElementById('steelCanvas');
   var steelCtx=steelCanv.getContext('2d');
+
+  if(triadImage !==null){
+    steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
+  }
+
+
   steelCtx.lineJoin="round";
-  steelCtx.clearRect(leftPad+grid*14.5, topPad, grid*1.5, grid*9);
-  steelCtx.textAlign="left";
   steelCtx.textBaseline="middle";
   var g=grid*9/12;
-  steelCtx.lineWidth=g/5;
-
   steelCtx.font=g/1.5+"px Arial ";
+  steelCtx.lineWidth=g/5;
   steelCanv.style.letterSpacing=(0-g/5)+"px";
+
+  steelCtx.textAlign="left";
+  steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9);
   for (var k=0; k<keyArray.length; k++){
     var atKey=keyArray[k].replace("b","♭");
     if(k==keyNum){
@@ -646,7 +668,20 @@ function drawKeys(){
       steelCtx.strokeText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
     }
     steelCtx.fillStyle="black";
-
     steelCtx.fillText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
   }
+
+
+  steelCtx.textAlign="center";
+  //steelCtx.fillStyle="white";
+  //steelCtx.fillRect(leftPad, topPad+grid*8, cellSize*12, grid*1);
+  steelCtx.fillStyle="black";
+  for (var i=0; i<intervalSequence.length; i++){
+    var item=intervalSequence[i];
+    var noteMod=(item.interval+keyNum*5)%12;
+    var str=keySequence[noteMod]+item.form;
+    console.log(str)
+    steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+grid*5);
+  }
+
 }
