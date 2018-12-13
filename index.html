@@ -82,12 +82,16 @@ function portraitGeometry(){
     style.innerHTML +='#wrapper{display:block;}';
   }
   style.innerHTML +='a{text-decoration:none; color:#777;}';
-  style.innerHTML +='#slideDiv{display:none;}';
   style.innerHTML +='#steelCanvas{display:none;}';
   style.innerHTML +='#steelControls{display:none;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
   style.innerHTML +='#loadingDiv{height:'+grid*4+'px; width:'+grid*4+'px;}';
   style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
+  document.getElementById('slideDiv').style.display="none";
+
+    for(var t=0; t<touchIdStack.length; t++){
+      window.clearInterval(touchesById[touchIdStack[t]].sustainInterval);
+    }
 
   for (var b=0; b<buttons.length; b++){
     //console.log(buttons[b]);
@@ -166,7 +170,6 @@ function landscapeGeometry(){
     steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
   }
   drawKeys();
-
 }
 
 

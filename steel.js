@@ -671,7 +671,6 @@ function drawKeys(){
     steelCtx.fillText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
   }
 
-
   steelCtx.textAlign="center";
   //steelCtx.fillStyle="white";
   //steelCtx.fillRect(leftPad, topPad+grid*8, cellSize*12, grid*1);
@@ -683,5 +682,4 @@ function drawKeys(){
     console.log(str)
     steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+grid*5);
   }
-
 }
