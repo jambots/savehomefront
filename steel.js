@@ -165,6 +165,8 @@ var keyArray=["C", "F", "Bb", "Eb", "Ab", "Db", "Gb", "B", "E", "A", "D", "G"];
 var keySequence=["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
 var keyName="A";
 var keyNum=9;
+
+
 var keySources=[];
 var intervalSequence=[
   {interval:0, form:""},
@@ -518,7 +520,8 @@ function bufferSamples(){
 
   startTime=new Date().getTime();
   loadList=[];
-  for(var k=0; k<keyArray.length; k++){
+  //for(var k=0; k<keyArray.length; k++){
+  for(var k=8; k<11; k++){
     loadList.push({bank:"triad", key:keyArray[k], sample:"0-s"})
   }
   loadNextSample();
