@@ -172,62 +172,6 @@ function landscapeGeometry(){
   drawKeys();
 }
 
-function drawKeys(){
-  var steelCanv=document.getElementById('steelCanvas');
-  var steelCtx=steelCanv.getContext('2d');
-
-  if(triadImage !==null){
-    steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
-  }
-
-
-  steelCtx.lineJoin="round";
-  steelCtx.textBaseline="middle";
-  var g=grid*9/12;
-  steelCtx.font=g/1.75+"px Arial ";
-  steelCtx.lineWidth=g/5;
-  steelCanv.style.letterSpacing=(0-g/5)+"px";
-
-  steelCtx.textAlign="left";
-  steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9);
-  for (var k=0; k<keyArray.length; k++){
-    var atKey=keyArray[k].replace("b","♭");
-    if(k==keyNum){
-      steelCtx.strokeStyle="white";
-      steelCtx.strokeText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
-    }
-
-    if(k==keySelection){
-      var selectionName=keyArray[keySelection];
-      if(loadedKeys.indexOf(selectionName)==-1){
-        steelCtx.strokeStyle="red";
-      } else {
-        steelCtx.strokeStyle="blue";
-      }
-      steelCtx.strokeText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
-      steelCtx.beginPath();
-      steelCtx.arc(leftPad+grid*15, topPad+g*k+.5*g, g,0,pi*2,true);
-      steelCtx.fill();
-      steelCtx.stroke();
-
-    }
-    steelCtx.fillStyle="black";
-    steelCtx.fillText(atKey, leftPad+grid*15, topPad+g*k+.5*g);
-  }
-
-  steelCtx.textAlign="center";
-  //steelCtx.fillStyle="white";
-  //steelCtx.fillRect(leftPad, topPad+grid*8, cellSize*12, grid*1);
-  steelCtx.fillStyle="black";
-  for (var i=0; i<intervalSequence.length; i++){
-    var item=intervalSequence[i];
-    var noteMod=(item.interval+keyNum*5)%12;
-    var str=keySequence[noteMod]+item.form;
-    console.log(str)
-    steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+grid*5);
-  }
-}
-
 
 
 

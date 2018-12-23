@@ -149,8 +149,8 @@ function slideTick(){
     var useY=slidePrevY+dy*prog;
     document.getElementById('slideDiv').style.width=grid*1+"px";
     document.getElementById('slideDiv').style.height=grid*2.5+"px";
-    document.getElementById('slideDiv').style.top=grid*(4.5*useY+1)+"px";
-    document.getElementById('slideDiv').style.left=cellSize*(useX)+"px";
+    document.getElementById('slideDiv').style.top=topPad+grid*(4.5*useY+1)+"px";
+    document.getElementById('slideDiv').style.left=leftPad+cellSize*(useX)+"px";
 
   }
   window.requestAnimationFrame(slideTick);
@@ -198,16 +198,19 @@ function handleSteelEvent(e){
   if((e.type=="touchstart")&&(e.touches.length==1)){
     if(e.touches[0].pageX>leftPad+grid*15){
       var fieldY=e.touches[0].pageY-topPad;
-      var yGrid=grid*9/12;
+      var yGrid=grid*9/14;
       var y=Math.floor(fieldY/yGrid);
-      if(y<0){y=0;}
-      if(y>11){y=11;}
-      mode="key";
-      keySelection=y;
-      //console.log(mode+" "+keySelection);
-      window.clearInterval(keyInterval);
-      keyInterval=window.setInterval("keyTick()", 300);
-      keyTick();
+      if(y<2){
+        hamburger();
+      } else{
+        mode="key";
+        if(y>13){y=13;}
+        keySelection=y-2;
+        //console.log(mode+" "+keySelection);
+        window.clearInterval(keyInterval);
+        keyInterval=window.setInterval("keyTick()", 300);
+        keyTick();
+      }
     }
   }
   if((e.type=="touchend")&&(e.touches.length==0)){
@@ -230,11 +233,11 @@ function handleSteelEvent(e){
   if(mode=="key"){
     if(e.type=="touchmove"){
       var fieldY=e.touches[0].pageY-topPad;
-      var yGrid=grid*9/12;
+      var yGrid=grid*9/14;
       var y=Math.floor(fieldY/yGrid);
-      if(y<0){y=0;}
-      if(y>11){y=11;}
-      keySelection=y;
+      if(y<2){y=2;}
+      if(y>13){y=13;}
+      keySelection=y-2;
     }
   }
   //console.log("mode=" +mode+ " type="+e.type+"");
@@ -636,3 +639,54 @@ var topPad=0;
 var leftPad=0;
 
 var pi=Math.PI;
+
+function drawKeys(){
+  var steelCanv=document.getElementById('steelCanvas');
+  var steelCtx=steelCanv.getContext('2d');
+
+  if(triadImage !==null){
+    steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
+  }
+
+
+  steelCtx.lineJoin="round";
+  steelCtx.textBaseline="middle";
+  var g=grid*9/14;
+  steelCtx.font=g/1.75+"px Arial ";
+  steelCtx.lineWidth=g/8;
+  //steelCanv.style.letterSpacing=(0-g/5)+"px";
+
+  steelCtx.textAlign="left";
+  steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9);
+  for (var k=0; k<keyArray.length; k++){
+    var x=leftPad+grid*15;
+    var y=topPad+g*k+2.5*g;
+    var atKey=keyArray[k].replace("b","♭");
+
+    if(k==keySelection){
+      steelCtx.beginPath();
+      steelCtx.arc(x+g/3,y, g*.6,0,pi*2,true);
+      steelCtx.fillStyle="white";
+      steelCtx.strokeStyle="black";
+      steelCtx.stroke();
+      steelCtx.fill();
+
+    }
+
+    steelCtx.fillStyle="black";
+    steelCtx.fillText(atKey, x,y);
+  }
+
+  steelCtx.textAlign="center";
+  //steelCtx.fillStyle="white";
+  //steelCtx.fillRect(leftPad, topPad+grid*8, cellSize*12, grid*1);
+  steelCtx.fillStyle="black";
+  for (var i=0; i<intervalSequence.length; i++){
+    var item=intervalSequence[i];
+    //var noteMod=(item.interval+keyNum*5)%12;
+    var noteMod=(item.interval+keySelection*5)%12;
+    var str=keySequence[noteMod]+item.form;
+    console.log(str)
+    steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+grid*5);
+  }
+}
