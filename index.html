@@ -195,7 +195,7 @@ function flashlightOn(){
 }
 
 function handleEvent(e){
-  //console.log(e.target.id);
+  console.log(e.target.id);
   if(audioInited==false){initAudio();}
 
   e.stopPropagation();
@@ -237,7 +237,6 @@ function setupButtons(){
       handleEvent(evt)
     });
     el.addEventListener("touchstart", function(evt){
-      if(audioInited==false){initAudio();}
       handleEvent(evt);
 
     });
@@ -417,7 +416,7 @@ function openGreen(){
 function init(){
   //console.log('init()');
   document.addEventListener("deviceready", resumeInit, false);
-  getFeeds();
+  //getFeeds();
 }
 var controls;
 var feeds=[];
@@ -473,13 +472,16 @@ function createFeed(network){
 }
 
 function resumeInit(){
-  //console.log('resumeInit()');
+  console.log('resumeInit()');
   new ScrollFix(document.getElementById('feeds'));
   canv=document.getElementById('steelCanvas');
   controls=document.getElementById('steelControls');
   controls.addEventListener('touchstart', touchStart, false);
   controls.addEventListener('touchmove', touchMove, false);
   controls.addEventListener('touchend', touchEnd, false);
+  controls.addEventListener('mousedown', mouseDown, false);
+  controls.addEventListener('mousemove', mouseMove, false);
+  controls.addEventListener('mouseup', mouseUp, false);
 
 /*
 
@@ -491,7 +493,7 @@ function resumeInit(){
   setupButtons();
   window.setInterval("geometryTick()",1000);
   geometryTick();
-  initAudio();
+  //initAudio();
   helmsImage = new Image();
   helmsImage.addEventListener("load", imageLoaded, false);
   helmsImage.src = "imageslarge/bg_helms.png";
@@ -529,7 +531,7 @@ function touchEnd(evt){
 var mouseDragging=false;
 function mouseDown(event){
   event.preventDefault();
-  //console.log(event);
+  console.log(event);
   handleSteelEvent({type:"touchstart", touches:[{identifier:99, pageX:event.clientX, pageY:event.clientY}]});
   mouseDragging=true;
 }
@@ -542,7 +544,7 @@ function mouseMove(event){
 }
 function mouseUp(event){
   event.preventDefault();
-  //console.log(event);
+  console.log(event);
   handleSteelEvent({type:"touchend",touches:[]});
   mouseDragging=false;
 }

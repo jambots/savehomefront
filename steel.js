@@ -96,8 +96,8 @@ function comTick(){
       spliceList=[];
       for(var s=0; s<sources.length; s++){
         if(sources[s].channel==comQueue[c].channel){
-          console.log(sources[s].source.playbackState);
-          if(sources[s].source.playbackState>0){
+          console.log(sources[s].source.playbackState===undefined);
+          if((sources[s].source.playbackState>0)||(sources[s].source.playbackState===undefined)){
             sources[s].source.stop();
             sources[s].source.disconnect();
           }
@@ -657,13 +657,13 @@ function drawKeys(){
   //steelCanv.style.letterSpacing=(0-g/5)+"px";
 
   steelCtx.textAlign="left";
-  steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9);
+  steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9.5);
   for (var k=0; k<keyArray.length; k++){
     var x=leftPad+grid*15;
     var y=topPad+g*k+2.5*g;
     var atKey=keyArray[k].replace("b","♭");
 
-    if(k==keySelection){
+    if((k==keySelection)||(k==keyNum)){
       steelCtx.beginPath();
       steelCtx.arc(x+g/3,y, g*.6,0,pi*2,true);
       steelCtx.fillStyle="white";
@@ -683,10 +683,12 @@ function drawKeys(){
   steelCtx.fillStyle="black";
   for (var i=0; i<intervalSequence.length; i++){
     var item=intervalSequence[i];
-    //var noteMod=(item.interval+keyNum*5)%12;
     var noteMod=(item.interval+keySelection*5)%12;
+    if(keySelection==-1){
+      noteMod=(item.interval+keyNum*5)%12;
+    }
     var str=keySequence[noteMod]+item.form;
-    console.log(str)
+    //console.log(str)
     steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+grid*5);
   }
 }
