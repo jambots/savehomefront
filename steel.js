@@ -643,7 +643,7 @@ function bufferSamples(){
   startTime=new Date().getTime();
   loadList=[];
   //for(var k=0; k<keyArray.length; k++){
-  for(var k=8; k<11; k++){
+  for(var k=0; k<keyArray.length; k++){
     loadList.push({bank:"triad", key:keyArray[k], sample:"0-s"})
   }
   loadNextSample();
