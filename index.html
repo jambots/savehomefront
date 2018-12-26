@@ -6,8 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="jquery.min.js"></script>
 <script src="scrollfix.js"></script>
+<script src="textrecttitles.js"></script>
 <link rel="stylesheet" type="text/css" href="reset-min.css">
 <style type="text/css">
 body, html{width:100%; height:100%; overflow:hidden; scrollbars:none; font-family:batmanforeveralternateregular;}
@@ -83,6 +84,7 @@ function portraitGeometry(){
   }
   style.innerHTML +='a{text-decoration:none; color:#777;}';
   style.innerHTML +='#steelCanvas{display:none;}';
+  style.innerHTML +='#helpCanvas{display:none;}';
   style.innerHTML +='#steelControls{display:none;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
   style.innerHTML +='#loadingDiv{height:'+grid*4+'px; width:'+grid*4+'px;}';
@@ -146,11 +148,12 @@ function landscapeGeometry(){
   style.innerHTML +='#greentext{display:none;}';
   style.innerHTML +='#greenback{display:none;}';
   style.innerHTML +='#steelCanvas{display:block; background-color: #ddd; position:absolute;}';
+  style.innerHTML +='#helpCanvas{display:block; position:absolute;}';
   style.innerHTML +='#steelControls{display:block; position:absolute;}';
   style.innerHTML +='#loadingDiv{background-image:url(imageslarge/loading.png); background-size:contain;}';
   style.innerHTML +='#loadingDiv{height:'+grid*4+'px; width:'+grid*4+'px;}';
   style.innerHTML +='#loadingDiv{top:'+(wh-grid*4)/2+'px; left:'+(ww-grid*4)/2+'px; position:absolute;}';
-  style.innerHTML +='#slideDiv{position:absolute; margin:0; background-image:url(imageslarge/slide.png);}';
+  style.innerHTML +='#slideDiv{position:absolute; margin:0; }';
   style.innerHTML +='#slideDiv{background-size:100% 100%;}';
   //style.innerHTML +='#slideDiv{width:'+grid*1+'px; height:'+grid*4+'px}';
 
@@ -171,6 +174,7 @@ function landscapeGeometry(){
   }
   drawKeys();
 }
+var helpUp=true;
 
 
 
@@ -440,7 +444,7 @@ function testFeeds(){
     }
     if(found==false){fails.push(required[r]);}
   }
-  console.log(fails);
+  //console.log(fails.length);
   if(fails.length>0){
     createFeed(fails[0]);
   }
@@ -464,13 +468,13 @@ function createFeed(network){
   var url='http://fetchrss.com/api/v1/feed/create?url='+networkUrl+'&auth='+auth;
   $.getJSON( url, function( data ) {
     //var items = [];
-    console.log(data);
+    //console.log(data);
 
     feeds.push=data.feed;
     testFeeds();
   });
 }
-
+var barImage;
 function resumeInit(){
   console.log('resumeInit()');
   new ScrollFix(document.getElementById('feeds'));
@@ -500,6 +504,13 @@ function resumeInit(){
   triadImage = new Image();
   triadImage.addEventListener("load", imageLoaded, false);
   triadImage.src = "imageslarge/bg_triad.png"
+
+  for (var h=0; h<helpArray.length; h++){
+    helpImages[h].addEventListener("load", helpLoaded, false);
+    helpImages[h].src = "imageslarge/help"+h+".png"
+  }
+  window.requestAnimationFrame(animTick);
+
 }
 function touchStart(evt){
   evt.preventDefault ();
@@ -509,7 +520,7 @@ function touchStart(evt){
         syn.touches.push({identifier:evt.touches[t].identifier, pageX:evt.touches[t].pageX, pageY:evt.touches[t].pageY});
       }
 
-  handleSteelEvent(syn);
+  handleLandscapeEvent(syn);
 }
 function touchMove(evt){
  // alert('touchMove');
@@ -519,33 +530,33 @@ function touchMove(evt){
         syn.touches.push({identifier:evt.touches[t].identifier, pageX:evt.touches[t].pageX, pageY:evt.touches[t].pageY});
       }
 
-  handleSteelEvent(syn);
+  handleLandscapeEvent(syn);
 }
 function touchEnd(evt){
   evt.preventDefault();
       var syn={type:"touchend", touches:[]};
 
-  handleSteelEvent(syn);
+  handleLandscapeEvent(syn);
 }
 
 var mouseDragging=false;
 function mouseDown(event){
   event.preventDefault();
-  console.log(event);
-  handleSteelEvent({type:"touchstart", touches:[{identifier:99, pageX:event.clientX, pageY:event.clientY}]});
+  //console.log(event);
+  handleLandscapeEvent({type:"touchstart", touches:[{identifier:99, pageX:event.clientX, pageY:event.clientY}]});
   mouseDragging=true;
 }
 function mouseMove(event){
   event.preventDefault();
   if(mouseDragging){
     //console.log(event);
-    handleSteelEvent({type:"touchmove", touches:[{identifier:99, pageX:event.clientX, pageY:event.clientY}]});
+    handleLandscapeEvent({type:"touchmove", touches:[{identifier:99, pageX:event.clientX, pageY:event.clientY}]});
   }
 }
 function mouseUp(event){
   event.preventDefault();
-  console.log(event);
-  handleSteelEvent({type:"touchend",touches:[]});
+  //console.log(event);
+  handleLandscapeEvent({type:"touchend",touches:[]});
   mouseDragging=false;
 }
 /*
@@ -556,6 +567,10 @@ function scrollStop(){
 function imageLoaded(){
   //console.log('imageLoaded')
   geometry();
+}
+function helpLoaded(){
+  //console.log('imageLoaded')
+  if(helpUp){drawHelp();}
 }
 var helmsImage=null;
 var triadImage=null;
@@ -599,6 +614,7 @@ var triadImage=null;
 
   <canvas id="steelCanvas"></canvas>
   <div id="slideDiv" style="display:none;"></div>
+  <canvas id="helpCanvas"></canvas>
   <div id="steelControls"></div>
   <div id="loadingDiv" style="display:none;"></div>
 </body>

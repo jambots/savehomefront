@@ -51,7 +51,7 @@ function initAudio(){
 
   setupChannelMap();
   bufferSamples();
-  window.requestAnimationFrame(slideTick);
+  //window.requestAnimationFrame(animTick);
 }
 function sustainKill(theChannel){
   lastSustainChannel=-1;
@@ -121,9 +121,18 @@ var slidePrevX=0;
 var slidePrevY=0;
 var slideSpeed=.02;
 var slideProg=1;
+function animTick(){
+  if(helpUp==false){slideTick();}
+  if(helpUp){helpTick();}
+  window.requestAnimationFrame(animTick);
+}
+
 function slideTick(){
+
   if(ww>wh){
+    var moveType="uh";
     if(slideQueue.length>0){
+      console.log(slideQueue);
       var move=slideQueue[0];
       slideSpeed=move.speed;
       slideProg=0;
@@ -137,24 +146,29 @@ function slideTick(){
       if(move.type=="end"){
         document.getElementById('slideDiv').style.display="none";
       }
+      moveType=moveType;
+      // end of new command
       slideQueue=[];
-    }// end of new command
-    slideProg+=slideSpeed;
-    if(slideProg>1){slideProg=1;}
-    var prog=slideProg;//(Math.cos(Math.PI*(1-slideProg)) + 1) / 2;
-    if((prog<1)&&(prog>0)){console.log(prog);}
-    var dx=slideX-slidePrevX;
-    var dy=slideY-slidePrevY;
-    var useX=slidePrevX+dx*prog;
-    var useY=slidePrevY+dy*prog;
-    document.getElementById('slideDiv').style.width=grid*1+"px";
-    document.getElementById('slideDiv').style.height=grid*2.5+"px";
-    document.getElementById('slideDiv').style.top=topPad+grid*(4.5*useY+1)+"px";
-    document.getElementById('slideDiv').style.left=leftPad+cellSize*(useX)+"px";
 
+    }
+    if(moveType!="end"){
+      slideProg+=slideSpeed;
+      if(slideProg>1){slideProg=1;}
+      var prog=slideProg;//(Math.cos(Math.PI*(1-slideProg)) + 1) / 2;
+      //if((prog<1)&&(prog>0)){console.log(prog);}
+      var dx=slideX-slidePrevX;
+      var dy=slideY-slidePrevY;
+      var useX=slidePrevX+dx*prog;
+      var useY=slidePrevY+dy*prog;
+      document.getElementById('slideDiv').style.width=grid*1+"px";
+      document.getElementById('slideDiv').style.height=grid*2.5+"px";
+      document.getElementById('slideDiv').style.top=topPad+grid*(4.5*useY+1)+"px";
+      document.getElementById('slideDiv').style.left=leftPad+cellSize*(useX)+"px";
+      document.getElementById('slideDiv').style.backgroundImage='linear-gradient(to right, '+stops+')';
+    }
   }
-  window.requestAnimationFrame(slideTick);
 }
+var stops="rgb(215,215,215),rgb(77,77,77),rgb(120,120,120),rgb(126,126,126),rgb(132,132,132),rgb(143,143,143),rgb(230,230,230),rgb(155,155,155),rgb(126,126,126),rgb(138,138,138),rgb(154,154,154),rgb(161,161,161),rgb(175,175,175),rgb(204,204,204),rgb(254,254,254),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(192,192,192),rgb(170,170,170),rgb(147,147,147),rgb(115,115,115),rgb(97,97,97),rgb(88,88,88),rgb(101,101,101),rgb(106,106,106),rgb(127,127,127),rgb(129,129,129),rgb(132,132,132),rgb(146,146,146),rgb(220,220,220),rgb(253,253,253),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(254,254,254),rgb(131,131,131),rgb(186,186,186),rgb(226,226,226),rgb(165,165,165),rgb(143,143,143),rgb(118,118,118),rgb(92,92,92),rgb(121,121,121)";
 var keySources=[];
 var keySelection=-1;
 var keyInterval;
@@ -191,18 +205,123 @@ function keyTick(){
   drawKeys();
 }
 var audioInited=false;
-function handleSteelEvent(e){
+function handleLandscapeEvent(e){
   if(audioInited==false){initAudio();}
 
-  //console.log(e.type);
+  if(helpUp){
+    handleHelpEvent(e)
+  }else{
+    handleSteelEvent(e)
+  }
+}
+var buttoning=false;
+var helpProg=0;
+var helpAt=0;
+var xing=false;
+function handleHelpEvent(e){
+  if(docking){
+    buttoning=false;
+    return false;
+  }
+  var inset=grid;
+  console.log("help "+e.type);
+  if(e.type=="touchstart"){
+    var found="";
+    var x=e.touches[0].pageX;
+    var y=e.touches[0].pageY;
+    if((x>ww-inset-grid)&&(y<inset+grid)){found="x";}
+    if((x>ww-inset-grid*3)&&(y>wh-inset-grid)){
+      if(helpAt<helpArray.length-1){
+        found="next";
+      }
+      else{
+        found="done";
+      }
+    }
+    if(helpAt==helpArray.length-1){
+      if((x>inset+grid*3)&&(x<ww-inset-grid*3)&&(y>wh-inset-grid)){
+        found="donate";
+      }
+    }
+    if((x<inset+grid*3)&&(y>wh-inset-grid)){
+      if(helpAt>0){
+        found="back";
+      }
+    }
+    if(found != ""){buttoning=true;}
+    if(found =="next"){
+      startHelpProg=helpProg;
+      dockProg=0;
+      helpAt++;
+      docking=true;
+    }
+    if(found =="x"){
+      xing=true;
+    }
+    if(found =="done"){
+      xing=true;
+    }
+    if(found=="donate"){cordova.InAppBrowser.open("https://savehomefront.org", "_system")
+}
+    if(found =="back"){
+      startHelpProg=helpProg;
+      dockProg=0;
+      helpAt--;
+      docking=true;
+    }
+    console.log(found);
+  }
+  if(e.type=="touchend"){
+    buttoning=false;
+    if(xing){
+        helpProg=helpAt;
+        helpUp=false;
+        docking=false;
+        dockProg=1;
+        xing=false;
+        document.getElementById('helpCanvas').style.display="none";
+    }
+  }
+  console.log(buttoning);
+
+}
+function hamburger(){
+  buttoning=true;
+  helpProg=helpAt;
+  helpUp=true;
+  docking=false;
+  dockProg=1;
+  xing=false;
+  document.getElementById('helpCanvas').style.display="block";
+
+}
+var dockProg=1;
+var startHelpProg=0;
+var docking=false;
+function helpTick(){
+  if(docking){
+    dockProg+=.05;
+    if(dockProg>1){dockProg=1; docking=false;}
+    var easeProg=.5+Math.cos(pi-pi*dockProg)/2;
+    var invProg=1-easeProg;
+    helpProg=startHelpProg*invProg+helpAt*easeProg;
+
+  }
+  document.getElementById("helpCanvas").style.left="-"+helpProg*ww+"px";
+}
+
+function handleSteelEvent(e){
+
+  //console.log("steel "+e.type+" "+helpUp);
   if((e.type=="touchstart")&&(e.touches.length==1)){
-    if(e.touches[0].pageX>leftPad+grid*15){
+    if(e.touches[0].pageX>leftPad+grid*14.5){
       var fieldY=e.touches[0].pageY-topPad;
       var yGrid=grid*9/14;
       var y=Math.floor(fieldY/yGrid);
       if(y<2){
         hamburger();
-      } else{
+        mode="hamburger";
+      }else{
         mode="key";
         if(y>13){y=13;}
         keySelection=y-2;
@@ -211,7 +330,7 @@ function handleSteelEvent(e){
         keyInterval=window.setInterval("keyTick()", 300);
         keyTick();
       }
-    }
+    }else{mode="play";}
   }
   if((e.type=="touchend")&&(e.touches.length==0)){
     if(mode=="key"){
@@ -536,7 +655,7 @@ function loadNextSample(){
   }
   else{
     var nowTime=new Date().getTime();
-    console.log(nowTime-startTime);
+    //console.log(nowTime-startTime);
     bufferKey(9);
   }
 }
@@ -589,7 +708,7 @@ function loadNextKey(){
   }
   else{
     var nowTime=new Date().getTime();
-    console.log(nowTime-startTime);
+    //console.log(nowTime-startTime);
     document.getElementById('loadingDiv').style.display="none";
   }
 }
@@ -615,7 +734,7 @@ function loadKeySound(bank,key,sample) {
   request.send();
 }
 function onError(e){
-  console.log(e);
+  console.log('onerror');
 }
 
 function sourceBuffer(buffer) {
@@ -641,6 +760,7 @@ var leftPad=0;
 var pi=Math.PI;
 
 function drawKeys(){
+
   var steelCanv=document.getElementById('steelCanvas');
   var steelCtx=steelCanv.getContext('2d');
 
@@ -656,8 +776,9 @@ function drawKeys(){
   steelCtx.lineWidth=g/8;
   //steelCanv.style.letterSpacing=(0-g/5)+"px";
 
-  steelCtx.textAlign="left";
+  steelCtx.textAlign="center";
   steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9.5);
+  steelCtx.fillText("info", leftPad+grid*15.33,topPad+g/2);
   for (var k=0; k<keyArray.length; k++){
     var x=leftPad+grid*15;
     var y=topPad+g*k+2.5*g;
@@ -674,7 +795,7 @@ function drawKeys(){
     }
 
     steelCtx.fillStyle="black";
-    steelCtx.fillText(atKey, x,y);
+    steelCtx.fillText(atKey, x+grid/3,y);
   }
 
   steelCtx.textAlign="center";
@@ -690,5 +811,146 @@ function drawKeys(){
     var str=keySequence[noteMod]+item.form;
     //console.log(str)
     steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+grid*5);
+  }
+}
+var titleArray=[
+  "S.A.V.E. HOMEFRONT STEEL GUITAR",
+  "HOW TO PLAY",
+  "SELECT A KEY SIGNATURE",
+  "PLAYING IN KEY",
+  "PLAYING KEY CHANGES",
+  "ABOUT S.A.V.E. HOMEFRONT",
+];
+var helpArray=[
+  "Designed_by_JAMBOTS.COM This-unique_instrument brings the sounds of a real pedal steel guitar to your mobile device. The simplified interface requres only a touch and no musical knowlege.",
+  "Touch and hold on the strings. Slide slowly left and right to smoothly move between chords.",
+  "All 12 key signatures are shown on the right. Drag up and down until it sounds like you are in the right key for the song you are playing.",
+  "The fretboard is labeled with chords, mostly from the key you are in. The markers indicate chords just outside of the selected key.",
+  "A marked chord will only sound when you touch it directly. Dragging past a marked chord will ignore it.",
+  "What The Green Light Means: You’re letting Veterans know you support them as they leave military service and become your community neighbor. Let this light shine from your home or workplace. Green is a powerful color, meaning growth, possibility, beginnings. As this light shines, it shows that through us, the mission continues. Leave A Light On to show your support! Visit savehomefront.org to donate and learn more.",
+];
+var helpImages=[];
+for (var h=0; h<helpArray.length; h++){
+  helpImages.push(new Image());
+}
+
+//var sourceString="Mr._Zero's PsychoGello Vinyl_Radio_Show The_Monkees Michael_Nesmith Peter_Tork David_Jones Mickey_Dolenz Boyce_and_Hart";
+
+
+//sourceString=sourceString.toUpperCase();
+var resizeTimeout;
+var titles=3;
+var fieldColor="rgb(247,247,247)";
+var borderColor="rgb(40,80,159)";
+var calloutColor="rgb(212,66,67)";
+var surroundColor="rgb(40,80,159)";
+var fontColor="rgb(62,150,205)";
+function drawHelp(){
+  console.log("drawHelp()");
+  var inset=grid;
+  var helpCanv=document.getElementById('helpCanvas');
+  var helpCtx=helpCanv.getContext('2d');
+  helpCanv.width=ww*helpArray.length;
+  helpCanv.height=wh*helpArray.length;
+
+  for(var h=0; h<helpArray.length; h++){
+    var l=h*ww;
+    helpCtx.save();
+    helpCtx.translate(l, 0);
+
+    helpCtx.lineWidth=grid/4;
+    helpCtx.lineJoin="round";
+    helpCtx.fillStyle=fieldColor;
+    helpCtx.strokeStyle=borderColor;
+    roundRect(helpCtx, grid/2, grid/2, ww-grid, wh-grid, grid/2, true, true);
+
+    helpCtx.font=grid/2+"px batmanforeveralternateregular";
+    helpCtx.textAlign="left";
+    helpCtx.textBaseline="middle";
+    helpCtx.fillStyle=fieldColor;
+    helpCtx.strokeStyle=fontColor;
+    helpCtx.lineWidth=grid/8;
+    helpCtx.strokeText(titleArray[h], inset, inset*1.5);
+    helpCtx.fillText(titleArray[h], inset, inset*1.5);
+
+    helpCtx.fillStyle=fontColor;
+    helpCtx.strokeStyle=surroundColor;
+    if(h>0){roundRect(helpCtx, inset, wh-inset-grid,grid*3, grid, grid/8, true,false);}
+    roundRect(helpCtx, ww-inset-grid*3, wh-inset-grid,grid*3, grid, grid/8, true,false);
+    helpCtx.fillStyle=calloutColor;
+    roundRect(helpCtx, ww-inset-grid*.75, inset-grid*.25, grid, grid, grid/2, true, false);
+
+    if(h==helpArray.length-1){
+      helpCtx.textAlign="center";
+      helpCtx.fillStyle=fontColor;
+      helpCtx.fillText("savehomefront.org", ww/2, wh-inset-grid/2);
+
+    }
+
+    helpCtx.fillStyle=fontColor;
+    helpCtx.strokeStyle=surroundColor;
+
+    helpCtx.textAlign="center";
+    helpCtx.fillStyle=fieldColor;
+    if(h>0){
+      helpCtx.fillText("back", inset+grid*1.5, wh-inset-grid/2);
+    }
+    if(h<5){helpCtx.fillText("next", ww-inset-grid*1.5, wh-inset-grid/2);}
+    else{helpCtx.fillText("done", ww-inset-grid*1.5, wh-inset-grid/2);}
+    helpCtx.fillText("X", ww-inset-grid*.25, inset+grid*.25);
+
+    helpCtx.fillStyle=fontColor;
+    helpCtx.strokeStyle=surroundColor;
+    helpCtx.lineWidth=grid/8;
+    helpCtx.textAlign="left";
+
+    var confObj={
+    titles:0,
+    titleFont:"batmanforeveralternateregular",
+    text:helpArray[h],
+      topHeavy:0,
+      embiggen:1.25,
+
+      font:"batmanforeveralternateregular",
+      ctx:helpCtx,
+      x:inset,
+      y:inset*2.5,
+      w:ww-inset*2-(wh-inset*4.5),
+      h:wh-inset*5,
+      stroke0:false,
+      fill:true,
+      stroke1:false
+    };
+    textRect(confObj);
+
+    //roundRect(helpCtx, ww-(wh-inset*5)-inset, inset*2.5, (wh-inset*5),(wh-inset*5), grid/2, false, true);
+    helpCtx.drawImage(helpImages[h], ww-(wh-inset*5)-inset, inset*2.5, wh-inset*5, wh-inset*5);
+    helpCtx.restore();
+  }
+
+}
+function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+  if (typeof stroke == "undefined" ) {
+    stroke = true;
+  }
+  if (typeof radius === "undefined") {
+    radius = 5;
+  }
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+  if (stroke) {
+    ctx.stroke();
+  }
+  if (fill) {
+    ctx.fill();
   }
 }
