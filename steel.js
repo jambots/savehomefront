@@ -778,7 +778,7 @@ function drawKeys(){
 
   steelCtx.textAlign="center";
   steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9.5);
-  steelCtx.fillText("info", leftPad+grid*15.33,topPad+g/2);
+  steelCtx.fillText("info", leftPad+grid*15.33,topPad+g);
   for (var k=0; k<keyArray.length; k++){
     var x=leftPad+grid*15;
     var y=topPad+g*k+2.5*g;
