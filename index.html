@@ -120,6 +120,10 @@ function portraitGeometry(){
   document.getElementsByTagName('head')[0].appendChild(style);
 
 }
+var scaleDown=1;
+var ch=wh;
+var cw=ww;
+var cGrid=grid;
 
 function landscapeGeometry(){
   //console.log('landscapeGeometry');
@@ -160,17 +164,31 @@ function landscapeGeometry(){
   document.getElementsByTagName('head')[0].appendChild(style);
 
   var steelCanv=document.getElementById('steelCanvas');
-  steelCanv.width=ww;
-  steelCanv.height=wh;
-  controls.style.width=ww+"px";
-  controls.style.height=wh+"px";
+  scaleDown=1;
+  ch=wh;
+  cw=ww;
+  cGrid=grid;
+  //16777216
+  if(ww*wh > 100000){
+    scaleDown=100000/(ww*wh);
+    cw=Math.floor(ww*scaleDown);
+    ch=Math.floor(wh*scaleDown);
+    cGrid=grid*scaleDown;
+    }
+  steelCanv.width=cw;
+  steelCanv.height=ch;
+
+  controls.style.width=window.innerWidth+"px";
+  controls.style.height=window.innerHeight+"px";
+  steelCanv.style.width=window.innerWidth+"px";
+  steelCanv.style.height=window.innerHeight+"px";
 
   var steelCtx=steelCanv.getContext('2d');
   if(helmsImage !==null){
-    steelCtx.drawImage(helmsImage,leftPad,topPad,grid*14,grid*4.5);
+    steelCtx.drawImage(helmsImage,leftPad,topPad,cGrid*14,cGrid*4.5);
   }
   if(triadImage !==null){
-    steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
+    steelCtx.drawImage(triadImage,leftPad,topPad+cGrid*4.5,cGrid*14,cGrid*4.5);
   }
   drawKeys();
 }

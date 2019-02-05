@@ -765,22 +765,22 @@ function drawKeys(){
   var steelCtx=steelCanv.getContext('2d');
 
   if(triadImage !==null){
-    steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
+    steelCtx.drawImage(triadImage,leftPad,topPad+cGrid*4.5,cGrid*14,cGrid*4.5);
   }
 
 
   steelCtx.lineJoin="round";
   steelCtx.textBaseline="middle";
-  var g=grid*9/14;
+  var g=cGrid*9/14;
   steelCtx.font=g/1.75+"px Arial ";
   steelCtx.lineWidth=g/8;
   //steelCanv.style.letterSpacing=(0-g/5)+"px";
 
   steelCtx.textAlign="center";
-  steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9.5);
-  steelCtx.fillText("info", leftPad+grid*15.33,topPad+g);
+  steelCtx.clearRect(cGrid*14, topPad, ww-cGrid*14, cGrid*9.5);
+  steelCtx.fillText("info", leftPad+cGrid*15.33,topPad+g);
   for (var k=0; k<keyArray.length; k++){
-    var x=leftPad+grid*15;
+    var x=leftPad+cGrid*15;
     var y=topPad+g*k+2.5*g;
     var atKey=keyArray[k].replace("b","♭");
 
@@ -795,7 +795,7 @@ function drawKeys(){
     }
 
     steelCtx.fillStyle="black";
-    steelCtx.fillText(atKey, x+grid/3,y);
+    steelCtx.fillText(atKey, x+cGrid/3,y);
   }
 
   steelCtx.textAlign="center";
@@ -810,7 +810,7 @@ function drawKeys(){
     }
     var str=keySequence[noteMod]+item.form;
     //console.log(str)
-    steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+grid*5);
+    steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+cGrid*5);
   }
 }
 var titleArray=[
@@ -847,43 +847,45 @@ var surroundColor="rgb(40,80,159)";
 var fontColor="rgb(62,150,205)";
 function drawHelp(){
   console.log("drawHelp()");
-  var inset=grid;
+  var inset=cGrid;
   var helpCanv=document.getElementById('helpCanvas');
   var helpCtx=helpCanv.getContext('2d');
-  helpCanv.width=ww*helpArray.length;
-  helpCanv.height=wh*helpArray.length;
+  helpCanv.width=cw*helpArray.length;
+  helpCanv.height=ch*helpArray.length;
+  helpCanv.style.width=ww*helpArray.length;
+  helpCanv.style.height=wh*helpArray.length;
 
   for(var h=0; h<helpArray.length; h++){
-    var l=h*ww;
+    var l=h*cw;
     helpCtx.save();
     helpCtx.translate(l, 0);
 
-    helpCtx.lineWidth=grid/4;
+    helpCtx.lineWidth=cGrid/4;
     helpCtx.lineJoin="round";
     helpCtx.fillStyle=fieldColor;
     helpCtx.strokeStyle=borderColor;
-    roundRect(helpCtx, grid/2, grid/2, ww-grid, wh-grid, grid/2, true, true);
+    roundRect(helpCtx, cGrid/2, cGrid/2, ww-cGrid, wh-cGrid, cGrid/2, true, true);
 
-    helpCtx.font=grid/2+"px batmanforeveralternateregular";
+    helpCtx.font=cGrid/2+"px batmanforeveralternateregular";
     helpCtx.textAlign="left";
     helpCtx.textBaseline="middle";
     helpCtx.fillStyle=fieldColor;
     helpCtx.strokeStyle=fontColor;
-    helpCtx.lineWidth=grid/8;
+    helpCtx.lineWidth=cGrid/8;
     helpCtx.strokeText(titleArray[h], inset, inset*1.5);
     helpCtx.fillText(titleArray[h], inset, inset*1.5);
 
     helpCtx.fillStyle=fontColor;
     helpCtx.strokeStyle=surroundColor;
-    if(h>0){roundRect(helpCtx, inset, wh-inset-grid,grid*3, grid, grid/8, true,false);}
-    roundRect(helpCtx, ww-inset-grid*3, wh-inset-grid,grid*3, grid, grid/8, true,false);
+    if(h>0){roundRect(helpCtx, inset, wh-inset-cGrid,cGrid*3, cGrid, cGrid/8, true,false);}
+    roundRect(helpCtx, ww-inset-cGrid*3, wh-inset-cGrid,cGrid*3, cGrid, cGrid/8, true,false);
     helpCtx.fillStyle=calloutColor;
-    roundRect(helpCtx, ww-inset-grid*.75, inset-grid*.25, grid, grid, grid/2, true, false);
+    roundRect(helpCtx, ww-inset-cGrid*.75, inset-cGrid*.25, cGrid, cGrid, cGrid/2, true, false);
 
     if(h==helpArray.length-1){
       helpCtx.textAlign="center";
       helpCtx.fillStyle=fontColor;
-      helpCtx.fillText("savehomefront.org", ww/2, wh-inset-grid/2);
+      helpCtx.fillText("savehomefront.org", ww/2, wh-inset-cGrid/2);
 
     }
 
@@ -893,15 +895,15 @@ function drawHelp(){
     helpCtx.textAlign="center";
     helpCtx.fillStyle=fieldColor;
     if(h>0){
-      helpCtx.fillText("back", inset+grid*1.5, wh-inset-grid/2);
+      helpCtx.fillText("back", inset+cGrid*1.5, wh-inset-cGrid/2);
     }
-    if(h<5){helpCtx.fillText("next", ww-inset-grid*1.5, wh-inset-grid/2);}
-    else{helpCtx.fillText("done", ww-inset-grid*1.5, wh-inset-grid/2);}
-    helpCtx.fillText("X", ww-inset-grid*.25, inset+grid*.25);
+    if(h<5){helpCtx.fillText("next", ww-inset-cGrid*1.5, wh-inset-cGrid/2);}
+    else{helpCtx.fillText("done", ww-inset-cGrid*1.5, wh-inset-cGrid/2);}
+    helpCtx.fillText("X", ww-inset-cGrid*.25, inset+cGrid*.25);
 
     helpCtx.fillStyle=fontColor;
     helpCtx.strokeStyle=surroundColor;
-    helpCtx.lineWidth=grid/8;
+    helpCtx.lineWidth=cGrid/8;
     helpCtx.textAlign="left";
 
     var confObj={
