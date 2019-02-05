@@ -753,15 +753,9 @@ function playSource(source){
   source.start(0);
 }
 var cellSize=1;
-var cCellSize=1;
 var grid=1;
 var topPad=0;
 var leftPad=0;
-
-var scaleDown=1;
-var ch=wh;
-var cw=ww;
-var cGrid=grid;
 
 var pi=Math.PI;
 
@@ -771,22 +765,22 @@ function drawKeys(){
   var steelCtx=steelCanv.getContext('2d');
 
   if(triadImage !==null){
-    steelCtx.drawImage(triadImage,leftPad,topPad+cGrid*4.5,cGrid*14,cGrid*4.5);
+    steelCtx.drawImage(triadImage,leftPad,topPad+grid*4.5,grid*14,grid*4.5);
   }
 
 
   steelCtx.lineJoin="round";
   steelCtx.textBaseline="middle";
-  var g=cGrid*9/14;
+  var g=grid*9/14;
   steelCtx.font=g/1.75+"px Arial ";
   steelCtx.lineWidth=g/8;
   //steelCanv.style.letterSpacing=(0-g/5)+"px";
 
   steelCtx.textAlign="center";
-  steelCtx.clearRect(cGrid*14, topPad, ww-cGrid*14, cGrid*9.5);
-  steelCtx.fillText("info", leftPad+cGrid*15.33,topPad+g);
+  steelCtx.clearRect(grid*14, topPad, ww-grid*14, grid*9.5);
+  steelCtx.fillText("info", leftPad+grid*15.33,topPad+g);
   for (var k=0; k<keyArray.length; k++){
-    var x=leftPad+cGrid*15;
+    var x=leftPad+grid*15;
     var y=topPad+g*k+2.5*g;
     var atKey=keyArray[k].replace("b","♭");
 
@@ -801,7 +795,7 @@ function drawKeys(){
     }
 
     steelCtx.fillStyle="black";
-    steelCtx.fillText(atKey, x+cGrid/3,y);
+    steelCtx.fillText(atKey, x+grid/3,y);
   }
 
   steelCtx.textAlign="center";
@@ -816,7 +810,7 @@ function drawKeys(){
     }
     var str=keySequence[noteMod]+item.form;
     //console.log(str)
-    steelCtx.fillText(str, leftPad+(i+.5)*cCellSize, topPad+cGrid*5);
+    steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+grid*5);
   }
 }
 var titleArray=[
@@ -853,45 +847,49 @@ var surroundColor="rgb(40,80,159)";
 var fontColor="rgb(62,150,205)";
 function drawHelp(){
   console.log("drawHelp()");
-  var inset=cGrid;
+  console.log("width="+ww*6);
+  console.log("height="+wh);
+  console.log("total="+wh*ww*6);
+  var inset=grid;
   var helpCanv=document.getElementById('helpCanvas');
   var helpCtx=helpCanv.getContext('2d');
-  helpCanv.width=cw*helpArray.length;
-  helpCanv.height=ch;
-  helpCanv.style.width=ww*helpArray.length;
-  helpCanv.style.height=wh;
+  helpCanv.width=ww*helpArray.length;
+  helpCanv.height=wh;
+  var iPadProWidth= 1366*6;
+  var iPadProHeight= 1024;
+  var iPadPx=iPadProWidth*iPadProHeight;
 
   for(var h=0; h<helpArray.length; h++){
-    var l=h*cw;
+    var l=h*ww;
     helpCtx.save();
     helpCtx.translate(l, 0);
 
-    helpCtx.lineWidth=cGrid/4;
+    helpCtx.lineWidth=grid/4;
     helpCtx.lineJoin="round";
     helpCtx.fillStyle=fieldColor;
     helpCtx.strokeStyle=borderColor;
-    roundRect(helpCtx, cGrid/2, cGrid/2, ww-cGrid, wh-cGrid, cGrid/2, true, true);
+    roundRect(helpCtx, grid/2, grid/2, ww-grid, wh-grid, grid/2, true, true);
 
-    helpCtx.font=cGrid/2+"px batmanforeveralternateregular";
+    helpCtx.font=grid/2+"px batmanforeveralternateregular";
     helpCtx.textAlign="left";
     helpCtx.textBaseline="middle";
     helpCtx.fillStyle=fieldColor;
     helpCtx.strokeStyle=fontColor;
-    helpCtx.lineWidth=cGrid/8;
+    helpCtx.lineWidth=grid/8;
     helpCtx.strokeText(titleArray[h], inset, inset*1.5);
     helpCtx.fillText(titleArray[h], inset, inset*1.5);
 
     helpCtx.fillStyle=fontColor;
     helpCtx.strokeStyle=surroundColor;
-    if(h>0){roundRect(helpCtx, inset, ch-inset-cGrid,cGrid*3, cGrid, cGrid/8, true,false);}
-    roundRect(helpCtx, cw-inset-cGrid*3, ch-inset-cGrid,cGrid*3, cGrid, cGrid/8, true,false);
+    if(h>0){roundRect(helpCtx, inset, wh-inset-grid,grid*3, grid, grid/8, true,false);}
+    roundRect(helpCtx, ww-inset-grid*3, wh-inset-grid,grid*3, grid, grid/8, true,false);
     helpCtx.fillStyle=calloutColor;
-    roundRect(helpCtx, cw-inset-cGrid*.75, inset-cGrid*.25, cGrid, cGrid, cGrid/2, true, false);
+    roundRect(helpCtx, ww-inset-grid*.75, inset-grid*.25, grid, grid, grid/2, true, false);
 
     if(h==helpArray.length-1){
       helpCtx.textAlign="center";
       helpCtx.fillStyle=fontColor;
-      helpCtx.fillText("savehomefront.org", cw/2, ch-inset-cGrid/2);
+      helpCtx.fillText("savehomefront.org", ww/2, wh-inset-grid/2);
 
     }
 
@@ -901,15 +899,15 @@ function drawHelp(){
     helpCtx.textAlign="center";
     helpCtx.fillStyle=fieldColor;
     if(h>0){
-      helpCtx.fillText("back", inset+cGrid*1.5, ch-inset-cGrid/2);
+      helpCtx.fillText("back", inset+grid*1.5, wh-inset-grid/2);
     }
-    if(h<5){helpCtx.fillText("next", ww-inset-cGrid*1.5, wh-inset-cGrid/2);}
-    else{helpCtx.fillText("done", cw-inset-cGrid*1.5, ch-inset-cGrid/2);}
-    helpCtx.fillText("X", cw-inset-cGrid*.25, inset+cGrid*.25);
+    if(h<5){helpCtx.fillText("next", ww-inset-grid*1.5, wh-inset-grid/2);}
+    else{helpCtx.fillText("done", ww-inset-grid*1.5, wh-inset-grid/2);}
+    helpCtx.fillText("X", ww-inset-grid*.25, inset+grid*.25);
 
     helpCtx.fillStyle=fontColor;
     helpCtx.strokeStyle=surroundColor;
-    helpCtx.lineWidth=cGrid/8;
+    helpCtx.lineWidth=grid/8;
     helpCtx.textAlign="left";
 
     var confObj={
@@ -932,7 +930,7 @@ function drawHelp(){
     textRect(confObj);
 
     //roundRect(helpCtx, ww-(wh-inset*5)-inset, inset*2.5, (wh-inset*5),(wh-inset*5), grid/2, false, true);
-    helpCtx.drawImage(helpImages[h], cw-(ch-inset*5)-inset, inset*2.5, ch-inset*5, ch-inset*5);
+    helpCtx.drawImage(helpImages[h], ww-(wh-inset*5)-inset, inset*2.5, wh-inset*5, wh-inset*5);
     helpCtx.restore();
   }
 
