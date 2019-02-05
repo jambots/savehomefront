@@ -753,9 +753,15 @@ function playSource(source){
   source.start(0);
 }
 var cellSize=1;
+var cCellSize=1;
 var grid=1;
 var topPad=0;
 var leftPad=0;
+
+var scaleDown=1;
+var ch=wh;
+var cw=ww;
+var cGrid=grid;
 
 var pi=Math.PI;
 
@@ -810,7 +816,7 @@ function drawKeys(){
     }
     var str=keySequence[noteMod]+item.form;
     //console.log(str)
-    steelCtx.fillText(str, leftPad+(i+.5)*cellSize, topPad+cGrid*5);
+    steelCtx.fillText(str, leftPad+(i+.5)*cCellSize, topPad+cGrid*5);
   }
 }
 var titleArray=[
@@ -851,9 +857,9 @@ function drawHelp(){
   var helpCanv=document.getElementById('helpCanvas');
   var helpCtx=helpCanv.getContext('2d');
   helpCanv.width=cw*helpArray.length;
-  helpCanv.height=ch*helpArray.length;
+  helpCanv.height=ch;
   helpCanv.style.width=ww*helpArray.length;
-  helpCanv.style.height=wh*helpArray.length;
+  helpCanv.style.height=wh;
 
   for(var h=0; h<helpArray.length; h++){
     var l=h*cw;
@@ -877,15 +883,15 @@ function drawHelp(){
 
     helpCtx.fillStyle=fontColor;
     helpCtx.strokeStyle=surroundColor;
-    if(h>0){roundRect(helpCtx, inset, wh-inset-cGrid,cGrid*3, cGrid, cGrid/8, true,false);}
-    roundRect(helpCtx, ww-inset-cGrid*3, wh-inset-cGrid,cGrid*3, cGrid, cGrid/8, true,false);
+    if(h>0){roundRect(helpCtx, inset, ch-inset-cGrid,cGrid*3, cGrid, cGrid/8, true,false);}
+    roundRect(helpCtx, cw-inset-cGrid*3, ch-inset-cGrid,cGrid*3, cGrid, cGrid/8, true,false);
     helpCtx.fillStyle=calloutColor;
-    roundRect(helpCtx, ww-inset-cGrid*.75, inset-cGrid*.25, cGrid, cGrid, cGrid/2, true, false);
+    roundRect(helpCtx, cw-inset-cGrid*.75, inset-cGrid*.25, cGrid, cGrid, cGrid/2, true, false);
 
     if(h==helpArray.length-1){
       helpCtx.textAlign="center";
       helpCtx.fillStyle=fontColor;
-      helpCtx.fillText("savehomefront.org", ww/2, wh-inset-cGrid/2);
+      helpCtx.fillText("savehomefront.org", cw/2, ch-inset-cGrid/2);
 
     }
 
@@ -895,11 +901,11 @@ function drawHelp(){
     helpCtx.textAlign="center";
     helpCtx.fillStyle=fieldColor;
     if(h>0){
-      helpCtx.fillText("back", inset+cGrid*1.5, wh-inset-cGrid/2);
+      helpCtx.fillText("back", inset+cGrid*1.5, ch-inset-cGrid/2);
     }
     if(h<5){helpCtx.fillText("next", ww-inset-cGrid*1.5, wh-inset-cGrid/2);}
-    else{helpCtx.fillText("done", ww-inset-cGrid*1.5, wh-inset-cGrid/2);}
-    helpCtx.fillText("X", ww-inset-cGrid*.25, inset+cGrid*.25);
+    else{helpCtx.fillText("done", cw-inset-cGrid*1.5, ch-inset-cGrid/2);}
+    helpCtx.fillText("X", cw-inset-cGrid*.25, inset+cGrid*.25);
 
     helpCtx.fillStyle=fontColor;
     helpCtx.strokeStyle=surroundColor;
@@ -926,7 +932,7 @@ function drawHelp(){
     textRect(confObj);
 
     //roundRect(helpCtx, ww-(wh-inset*5)-inset, inset*2.5, (wh-inset*5),(wh-inset*5), grid/2, false, true);
-    helpCtx.drawImage(helpImages[h], ww-(wh-inset*5)-inset, inset*2.5, wh-inset*5, wh-inset*5);
+    helpCtx.drawImage(helpImages[h], cw-(ch-inset*5)-inset, inset*2.5, ch-inset*5, ch-inset*5);
     helpCtx.restore();
   }
 

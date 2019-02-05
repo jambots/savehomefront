@@ -120,10 +120,6 @@ function portraitGeometry(){
   document.getElementsByTagName('head')[0].appendChild(style);
 
 }
-var scaleDown=1;
-var ch=wh;
-var cw=ww;
-var cGrid=grid;
 
 function landscapeGeometry(){
   //console.log('landscapeGeometry');
@@ -168,6 +164,7 @@ function landscapeGeometry(){
   ch=wh;
   cw=ww;
   cGrid=grid;
+  cCellSize=cellSize;
   //16777216
   if(ww*wh > 100000){
     scaleDown=100000/(ww*wh);
